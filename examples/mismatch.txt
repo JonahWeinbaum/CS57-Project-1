@@ -1,0 +1,7 @@
+int function(int, void);
+
+void tester() {
+    void test1;
+    int asdn; 
+    function(test1, asdn);
+}
