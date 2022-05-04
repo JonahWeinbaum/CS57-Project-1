@@ -67,25 +67,29 @@
 
 
 /* First part of user prologue.  */
-#line 1 "minic.y"
+#line 1 "minic_temp.y"
 
-  #include "ast_c/ast.h"
+  #include "ast_c++/ast.hpp"
   #include "hash/hashtable.h"
+  #include <string.h>
+  #include <vector>
+
+  using namespace std;
 
   //Yacc Parameters
   extern int yylex(void);
   extern FILE *yyin;
   extern int yy_flex_debug;
-  extern void yyerror(char *s) {}
+  void yyerror(char *s) {};
 
   //Global Variables
   hashtable_t *var_decs;
   hashtable_t *fnc_decs;
 
   //Root note
-  astNode* root;
+  ASTRootNode root = ASTRootNode(nullptr, nullptr, nullptr);
 
-#line 89 "minic.tab.c"
+#line 93 "minic.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -495,7 +499,7 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  11
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   168
+#define YYLAST   188
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  29
@@ -504,7 +508,7 @@ union yyalloc
 /* YYNRULES -- Number of rules.  */
 #define YYNRULES  60
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  121
+#define YYNSTATES  117
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   283
@@ -556,13 +560,13 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,   120,   120,   121,   126,   127,   131,   132,   133,   134,
-     138,   139,   148,   149,   154,   155,   159,   163,   173,   174,
-     178,   183,   184,   188,   189,   190,   191,   192,   193,   199,
-     206,   213,   217,   218,   219,   220,   224,   228,   232,   236,
-     242,   248,   256,   262,   270,   276,   282,   285,   291,   292,
-     302,   308,   309,   310,   311,   312,   313,   318,   319,   323,
-     324
+       0,   143,   143,   144,   149,   150,   154,   155,   156,   157,
+     161,   162,   171,   172,   177,   178,   183,   186,   195,   196,
+     200,   205,   206,   210,   211,   212,   213,   214,   215,   221,
+     228,   236,   241,   242,   243,   244,   248,   253,   258,   263,
+     271,   276,   284,   291,   301,   307,   313,   316,   322,   323,
+     333,   340,   341,   342,   343,   344,   345,   350,   351,   355,
+     356
 };
 #endif
 
@@ -609,19 +613,18 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-      74,   -29,   -29,     2,    21,    74,   -13,    74,   -29,    44,
-      60,   -29,    40,    74,   -29,    46,    76,   -29,    77,    81,
-     -29,     1,    90,    28,    91,     1,   -29,    -6,    46,   101,
-     119,   -29,   106,   124,   -29,   -29,   -29,   108,   -29,   -29,
-      94,   113,    10,    12,   107,   153,     1,     1,   -29,     1,
-      33,    -5,     1,   115,   119,   -29,   -29,   122,   -29,     1,
-       1,     1,     1,   -29,   116,   -29,   -29,   -29,   -29,     6,
-     -29,   111,   -29,    42,   140,   117,    75,   120,   -29,   -29,
-     153,    82,   153,   -29,   126,   121,    99,    99,   -29,   -29,
-     119,   -29,     2,   -29,   -29,   -29,   -29,   -29,   -29,   -29,
-     -29,     1,   131,   -29,   132,   -29,     1,   123,   -29,    53,
-     -29,   153,   119,   119,   153,   -29,   -29,    89,    96,   -29,
-     -29
+     106,   -29,   -29,    59,     1,   106,   -10,   106,   -29,   -14,
+      -1,   -29,    -8,   106,   -29,    43,    39,   -29,    42,    44,
+     -29,    45,    58,    -6,    70,    45,   -29,    12,    43,    62,
+      52,   -29,    86,   151,   -29,   -29,   -29,   103,   -29,   -29,
+      89,   104,     6,    53,   100,   177,    45,    45,   -29,    45,
+     143,    -4,    45,   111,    85,   -29,   -29,   -29,   -29,    45,
+      45,    45,    45,   -29,   105,   -29,   -29,   -29,   -29,    71,
+     -29,   102,   -29,    78,   164,   108,   147,   109,   -29,   -29,
+     177,    81,   177,   -29,   -29,    73,    73,   -29,   -29,     9,
+     -29,    59,   -29,   -29,   -29,   -29,   -29,   -29,   -29,   -29,
+      45,   114,   -29,   118,   -29,    45,    92,   -29,   177,     9,
+       9,   177,   -29,   115,   122,   -29,   -29
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -634,22 +637,21 @@ static const yytype_int8 yydefact[] =
        5,    59,     0,     0,     0,     0,    31,    30,     0,     0,
        0,    21,     0,     0,    32,    33,    34,    25,    26,    27,
        0,     0,     0,     0,    30,    60,     0,     0,    40,     0,
-       0,     0,     0,     0,     0,    18,    22,     0,    24,     0,
+       0,     0,     0,     0,     0,    18,    16,    22,    24,     0,
        0,     0,     0,    23,     0,    46,    20,    28,     9,     0,
       10,    12,     8,     0,     0,     0,     0,     0,    35,    42,
-      48,     0,    29,    19,     0,    28,    36,    37,    38,    39,
-       0,     7,     0,    13,     6,    51,    53,    54,    56,    55,
-      52,     0,     0,    41,     0,    43,     0,    28,    16,     0,
-      11,    50,     0,     0,    49,    17,    45,     0,     0,    47,
-      44
+      48,     0,    29,    19,    17,    36,    37,    38,    39,     0,
+       7,     0,    13,     6,    51,    53,    54,    56,    55,    52,
+       0,     0,    41,     0,    43,     0,     0,    11,    50,     0,
+       0,    49,    45,     0,     0,    47,    44
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int16 yypgoto[] =
 {
-     -29,   -29,   -29,    63,   125,    62,   160,    57,   -29,   138,
-     -19,   -27,   -29,   -14,   -29,   -29,   -29,   -29,   -29,   -29,
-     -29,   -29,   118,   -29,    -3,   -28
+     -29,   -29,   -29,    48,    93,    49,   136,    38,   -29,   119,
+     -20,   -28,   -29,   -18,   -29,   -29,   -29,   -29,   -29,   -29,
+     -29,   -29,    97,   -29,    -3,   -29
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
@@ -657,7 +659,7 @@ static const yytype_int8 yydefgoto[] =
 {
        0,     4,     5,    16,    69,    70,     7,     8,    28,    29,
       30,    31,    32,    33,    34,    35,    36,    37,    65,    38,
-      39,    81,    75,   101,     9,    41
+      39,    81,    75,   100,     9,    41
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -665,44 +667,48 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      10,    14,    57,    56,    23,     1,     2,    45,    15,    54,
-      23,    50,    40,     1,     2,     1,     2,    51,    25,    79,
-      52,    11,    26,    44,    25,    40,    84,    56,    26,    44,
-      91,    92,    74,    76,    68,    74,    72,    80,    82,    71,
-      71,    59,    60,    61,    62,    86,    87,    88,    89,     1,
-       2,    47,    21,    22,    20,    23,    48,    78,    24,    21,
-      22,    15,    23,     6,    17,    24,    94,    92,    12,    25,
-      17,   109,    18,    26,    27,   116,    25,     1,     2,     3,
-      26,    27,    56,    59,    60,    61,    62,   111,    19,    71,
-      56,    56,   114,   117,   118,    21,    22,    15,    23,   103,
-      42,    24,    21,    22,    43,    23,   105,   106,    24,    61,
-      62,   119,    25,    46,    49,    55,    26,    27,   120,    25,
-      58,    64,    66,    26,    27,    21,    22,    67,    23,    83,
-      51,    24,    59,    60,    61,    62,    85,    90,    63,    93,
-     107,   102,    25,   108,   104,   115,    26,    27,    59,    60,
-      61,    62,   112,   113,   110,    95,    96,    97,    98,    99,
-     100,    59,    60,    61,    62,    13,    53,    77,    73
+      10,    11,    57,    45,    14,    23,    20,    50,    54,     1,
+       2,    15,    40,    15,    18,    21,    22,    47,    23,    25,
+      79,    24,    48,    26,    44,    40,    57,    19,    74,    76,
+      68,    74,    25,    80,    82,    51,    26,    27,    52,    71,
+      71,    85,    86,    87,    88,    17,     1,     2,     6,    21,
+      22,    17,    23,    12,    23,    24,     1,     2,    21,    22,
+      15,    23,     1,     2,    24,    42,    25,    43,    25,   106,
+      26,    27,    26,    44,    56,    25,    55,    72,    57,    26,
+      27,    46,   108,    61,    62,    57,    57,   111,    71,   113,
+     114,    21,    22,    49,    23,    90,    91,    24,    21,    22,
+      58,    23,    93,    91,    24,   104,   105,    84,    25,     1,
+       2,     3,    26,    27,   112,    25,    64,    66,    67,    26,
+      27,    21,    22,    51,    23,    83,    89,    24,    21,    22,
+      92,    23,   101,   103,    24,   109,    73,   115,    25,   110,
+     107,    13,    26,    27,   116,    25,    77,    53,     0,    26,
+      27,    59,    60,    61,    62,    59,    60,    61,    62,    59,
+      60,    61,    62,     0,     0,    63,     0,    78,     0,     0,
+       0,   102,    59,    60,    61,    62,     0,     0,     0,    94,
+      95,    96,    97,    98,    99,    59,    60,    61,    62
 };
 
 static const yytype_int8 yycheck[] =
 {
-       3,    14,    30,    30,     9,     3,     4,    21,    21,    28,
-       9,    25,    15,     3,     4,     3,     4,    23,    23,    24,
-      26,     0,    27,    28,    23,    28,    54,    54,    27,    28,
-      24,    25,    46,    47,    24,    49,    24,    51,    52,    42,
-      43,     8,     9,    10,    11,    59,    60,    61,    62,     3,
-       4,    23,     6,     7,    14,     9,    28,    24,    12,     6,
-       7,    21,     9,     0,     7,    12,    24,    25,     5,    23,
-      13,    90,    28,    27,    28,    22,    23,     3,     4,     5,
-      27,    28,   109,     8,     9,    10,    11,   101,    28,    92,
-     117,   118,   106,   112,   113,     6,     7,    21,     9,    24,
-      23,    12,     6,     7,    23,     9,    24,    25,    12,    10,
-      11,    22,    23,    23,    23,    14,    27,    28,    22,    23,
-      14,    13,    28,    27,    28,     6,     7,    14,     9,    14,
-      23,    12,     8,     9,    10,    11,    14,    21,    14,    28,
-      14,    24,    23,    22,    24,    22,    27,    28,     8,     9,
-      10,    11,    21,    21,    92,    15,    16,    17,    18,    19,
-      20,     8,     9,    10,    11,     5,    28,    49,    43
+       3,     0,    30,    21,    14,     9,    14,    25,    28,     3,
+       4,    21,    15,    21,    28,     6,     7,    23,     9,    23,
+      24,    12,    28,    27,    28,    28,    54,    28,    46,    47,
+      24,    49,    23,    51,    52,    23,    27,    28,    26,    42,
+      43,    59,    60,    61,    62,     7,     3,     4,     0,     6,
+       7,    13,     9,     5,     9,    12,     3,     4,     6,     7,
+      21,     9,     3,     4,    12,    23,    23,    23,    23,    89,
+      27,    28,    27,    28,    22,    23,    14,    24,   106,    27,
+      28,    23,   100,    10,    11,   113,   114,   105,    91,   109,
+     110,     6,     7,    23,     9,    24,    25,    12,     6,     7,
+      14,     9,    24,    25,    12,    24,    25,    22,    23,     3,
+       4,     5,    27,    28,    22,    23,    13,    28,    14,    27,
+      28,     6,     7,    23,     9,    14,    21,    12,     6,     7,
+      28,     9,    24,    24,    12,    21,    43,    22,    23,    21,
+      91,     5,    27,    28,    22,    23,    49,    28,    -1,    27,
+      28,     8,     9,    10,    11,     8,     9,    10,    11,     8,
+       9,    10,    11,    -1,    -1,    14,    -1,    24,    -1,    -1,
+      -1,    24,     8,     9,    10,    11,    -1,    -1,    -1,    15,
+      16,    17,    18,    19,    20,     8,     9,    10,    11
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
@@ -714,14 +720,13 @@ static const yytype_int8 yystos[] =
       14,     6,     7,     9,    12,    23,    27,    28,    37,    38,
       39,    40,    41,    42,    43,    44,    45,    46,    48,    49,
       53,    54,    23,    23,    28,    42,    23,    23,    28,    23,
-      42,    23,    26,    38,    39,    14,    40,    54,    14,     8,
+      42,    23,    26,    38,    39,    14,    22,    40,    14,     8,
        9,    10,    11,    14,    13,    47,    28,    14,    24,    33,
       34,    53,    24,    33,    42,    51,    42,    51,    24,    24,
-      42,    50,    42,    14,    54,    14,    42,    42,    42,    42,
-      21,    24,    25,    28,    24,    15,    16,    17,    18,    19,
-      20,    52,    24,    24,    24,    24,    25,    14,    22,    39,
-      34,    42,    21,    21,    42,    22,    22,    39,    39,    22,
-      22
+      42,    50,    42,    14,    22,    42,    42,    42,    42,    21,
+      24,    25,    28,    24,    15,    16,    17,    18,    19,    20,
+      52,    24,    24,    24,    24,    25,    39,    34,    42,    21,
+      21,    42,    22,    39,    39,    22,    22
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
@@ -740,7 +745,7 @@ static const yytype_int8 yyr1[] =
 static const yytype_int8 yyr2[] =
 {
        0,     2,     1,     2,     2,     3,     6,     5,     5,     4,
-       1,     3,     1,     2,     1,     2,     6,     7,     2,     3,
+       1,     3,     1,     2,     1,     2,     4,     5,     2,     3,
        2,     1,     2,     2,     2,     1,     1,     1,     2,     3,
        1,     1,     1,     1,     1,     3,     3,     3,     3,     3,
        2,     4,     3,     4,     7,     4,     2,     7,     1,     3,
@@ -1209,272 +1214,299 @@ yyreduce:
   switch (yyn)
     {
   case 6: /* fnc_dec: EXTERN type NAME LPAR param_decs RPAR  */
-#line 131 "minic.y"
-                                               {fnc_dec(fnc_decs, (yyvsp[-3].str_val), (yyvsp[-4].type_val), (yyvsp[-1].params_val));}
-#line 1215 "minic.tab.c"
+#line 154 "minic_temp.y"
+                                               { (yyval.element_val).fnc_dec.fnc_name = (yyvsp[-3].element_val).name; fnc_dec(fnc_decs, (yyvsp[-3].element_val).name, (yyvsp[-4].element_val).type, (yyvsp[-1].element_val).params);}
+#line 1220 "minic.tab.c"
     break;
 
   case 7: /* fnc_dec: type NAME LPAR param_decs RPAR  */
-#line 132 "minic.y"
-                                               {fnc_dec(fnc_decs, (yyvsp[-3].str_val), (yyvsp[-4].type_val), (yyvsp[-1].params_val));}
-#line 1221 "minic.tab.c"
+#line 155 "minic_temp.y"
+                                               { (yyval.element_val).fnc_dec.fnc_name = (yyvsp[-3].element_val).name; fnc_dec(fnc_decs, (yyvsp[-3].element_val).name, (yyvsp[-4].element_val).type, (yyvsp[-1].element_val).params);}
+#line 1226 "minic.tab.c"
     break;
 
   case 8: /* fnc_dec: EXTERN type NAME LPAR RPAR  */
-#line 133 "minic.y"
-                                               {params_t param; fnc_dec(fnc_decs, (yyvsp[-2].str_val), (yyvsp[-3].type_val),  param);}
-#line 1227 "minic.tab.c"
+#line 156 "minic_temp.y"
+                                               { (yyval.element_val).fnc_dec.fnc_name = (yyvsp[-2].element_val).name; params_t param; fnc_dec(fnc_decs, (yyvsp[-2].element_val).name, (yyvsp[-3].element_val).type, param);}
+#line 1232 "minic.tab.c"
     break;
 
   case 9: /* fnc_dec: type NAME LPAR RPAR  */
-#line 134 "minic.y"
-                                               {params_t param; fnc_dec(fnc_decs, (yyvsp[-2].str_val), (yyvsp[-3].type_val),  param);}
-#line 1233 "minic.tab.c"
+#line 157 "minic_temp.y"
+                                               { (yyval.element_val).fnc_dec.fnc_name = (yyvsp[-2].element_val).name; params_t param; fnc_dec(fnc_decs, (yyvsp[-2].element_val).name, (yyvsp[-3].element_val).type, param);}
+#line 1238 "minic.tab.c"
     break;
 
   case 10: /* param_decs: param_dec  */
-#line 138 "minic.y"
-                                        {(yyval.params_val).params[(yyval.params_val).size++] = (yyvsp[0].type_val);}
-#line 1239 "minic.tab.c"
+#line 161 "minic_temp.y"
+                                        {(yyval.element_val).params.params[(yyval.element_val).params.size++] = (yyvsp[0].element_val).type;}
+#line 1244 "minic.tab.c"
     break;
 
   case 11: /* param_decs: param_decs COMMA param_dec  */
-#line 139 "minic.y"
+#line 162 "minic_temp.y"
                                         {
-                                          for (int i = 0; i < (yyvsp[-2].params_val).size; i++) {
-                                            (yyval.params_val).params[i] = (yyvsp[-2].params_val).params[i];
+                                          for (int i = 0; i < (yyvsp[-2].element_val).params.size; i++) {
+                                            (yyval.element_val).params.params[i] = (yyvsp[-2].element_val).params.params[i];
                                           }
-                                          (yyval.params_val).size = (yyvsp[-2].params_val).size;
-                                          (yyval.params_val).params[(yyval.params_val).size++] = (yyvsp[0].type_val);
+                                          (yyval.element_val).params.size = (yyvsp[-2].element_val).params.size;
+                                          (yyval.element_val).params.params[(yyval.element_val).params.size++] = (yyvsp[0].element_val).type;
                                         }
-#line 1251 "minic.tab.c"
+#line 1256 "minic.tab.c"
     break;
 
   case 12: /* param_dec: type  */
-#line 148 "minic.y"
-                     {(yyval.type_val) = (yyvsp[0].type_val);}
-#line 1257 "minic.tab.c"
+#line 171 "minic_temp.y"
+                     { (yyval.element_val).type = (yyvsp[0].element_val).type; }
+#line 1262 "minic.tab.c"
     break;
 
   case 13: /* param_dec: type NAME  */
-#line 149 "minic.y"
-                     {(yyval.type_val) = (yyvsp[-1].type_val); var_dec(var_decs, (yyvsp[0].str_val), (yyvsp[-1].type_val));}
-#line 1263 "minic.tab.c"
+#line 172 "minic_temp.y"
+                     { (yyval.element_val).type = (yyvsp[-1].element_val).type; var_dec(var_decs, (yyvsp[0].element_val).name, (yyvsp[-1].element_val).type); }
+#line 1268 "minic.tab.c"
     break;
 
   case 20: /* var_dec: type NAME  */
-#line 178 "minic.y"
-                   { var_dec(var_decs, (yyvsp[0].str_val), (yyvsp[-1].type_val));}
-#line 1269 "minic.tab.c"
+#line 200 "minic_temp.y"
+                   { var_dec(var_decs, (yyvsp[0].element_val).name, (yyvsp[-1].element_val).type); }
+#line 1274 "minic.tab.c"
+    break;
+
+  case 23: /* code: expr SEMI  */
+#line 210 "minic_temp.y"
+                {(yyvsp[-1].element_val).ASTExprNode->print();}
+#line 1280 "minic.tab.c"
     break;
 
   case 29: /* assignment: NAME EQ expr  */
-#line 199 "minic.y"
+#line 221 "minic_temp.y"
                         {
-                          var_dec_check(var_decs, (yyvsp[-2].str_val));
-                          createAsgn(createVar((yyvsp[-2].str_val)), (yyvsp[0].expr_val).node);
+                          var_dec_check(var_decs, (yyvsp[-2].element_val).name);
+                          (yyval.element_val).ASTAsgnNode = new ASTAsgnNode(convertToString((yyvsp[-2].element_val).name), (yyvsp[0].element_val).ASTExprNode);
                         }
-#line 1278 "minic.tab.c"
+#line 1289 "minic.tab.c"
     break;
 
   case 30: /* expr: NAME  */
-#line 206 "minic.y"
+#line 228 "minic_temp.y"
             { 
-              if (var_dec_check(var_decs, (yyvsp[0].str_val))) 
+              if (var_dec_check(var_decs, (yyvsp[0].element_val).name)) 
               {
-                (yyval.expr_val).type = *(type_t*)hashtable_find(var_decs, (yyvsp[0].str_val));
-              }
-              (yyval.expr_val).node = createVar((yyvsp[0].str_val));
+                (yyval.element_val).type = *(type_t*)hashtable_find(var_decs, (yyvsp[0].element_val).name);
+              } 
+              (yyval.element_val).ASTVarNode = new ASTVarNode(convertToString((yyvsp[0].element_val).name));
+              (yyval.element_val).ASTExprNode = (yyval.element_val).ASTVarNode;
             }
-#line 1290 "minic.tab.c"
+#line 1302 "minic.tab.c"
     break;
 
   case 31: /* expr: NUM  */
-#line 213 "minic.y"
+#line 236 "minic_temp.y"
             { 
-              (yyval.expr_val).type = INT_TYPE;
-              (yyval.expr_val).node  = createCnst((yyvsp[0].num_val)); 
+              (yyval.element_val).type = INT_TYPE;
+              (yyval.element_val).ASTIntLiteralNode = (yyvsp[0].element_val).ASTIntLiteralNode;
+              (yyval.element_val).ASTExprNode = (yyval.element_val).ASTIntLiteralNode;
             }
-#line 1299 "minic.tab.c"
+#line 1312 "minic.tab.c"
     break;
 
   case 32: /* expr: bin_expr  */
-#line 217 "minic.y"
-                { (yyval.expr_val) = (yyvsp[0].expr_val); }
-#line 1305 "minic.tab.c"
+#line 241 "minic_temp.y"
+                { (yyval.element_val).ASTExprNode = (yyvsp[0].element_val).ASTBExprNode; }
+#line 1318 "minic.tab.c"
     break;
 
   case 33: /* expr: unr_expr  */
-#line 218 "minic.y"
-                { (yyval.expr_val) = (yyvsp[0].expr_val); }
-#line 1311 "minic.tab.c"
+#line 242 "minic_temp.y"
+                { (yyval.element_val).ASTExprNode = (yyvsp[0].element_val).ASTUExprNode; }
+#line 1324 "minic.tab.c"
     break;
 
   case 34: /* expr: fnc_call  */
-#line 219 "minic.y"
-                { (yyval.expr_val) = (yyvsp[0].expr_val); }
-#line 1317 "minic.tab.c"
+#line 243 "minic_temp.y"
+                { (yyval.element_val).ASTExprNode = (yyvsp[0].element_val).ASTCallNode; }
+#line 1330 "minic.tab.c"
     break;
 
   case 35: /* expr: LPAR expr RPAR  */
-#line 220 "minic.y"
-                      { (yyval.expr_val) = (yyvsp[-1].expr_val); }
-#line 1323 "minic.tab.c"
+#line 244 "minic_temp.y"
+                      { (yyval.element_val).ASTExprNode = (yyvsp[-1].element_val).ASTExprNode; }
+#line 1336 "minic.tab.c"
     break;
 
   case 36: /* bin_expr: expr ADD expr  */
-#line 224 "minic.y"
-                         { type_check((yyvsp[-2].expr_val).type, (yyvsp[0].expr_val).type);
-                           (yyval.expr_val).type = INT_TYPE;
-                           (yyval.expr_val).node = createBExpr((yyvsp[-2].expr_val).node, (yyvsp[0].expr_val).node, (yyvsp[-1].op_val));
+#line 248 "minic_temp.y"
+                         { 
+                           type_check((yyvsp[-2].element_val).type, (yyvsp[0].element_val).type);
+                           (yyval.element_val).ASTBExprNode = new ASTBExprNode((yyvsp[-2].element_val).ASTExprNode, (yyvsp[0].element_val).ASTExprNode, ADDIT);
+                           (yyval.element_val).type = INT_TYPE;
                          }
-#line 1332 "minic.tab.c"
+#line 1346 "minic.tab.c"
     break;
 
   case 37: /* bin_expr: expr SUB expr  */
-#line 228 "minic.y"
-                         { type_check((yyvsp[-2].expr_val).type, (yyvsp[0].expr_val).type);
-                           (yyval.expr_val).type = INT_TYPE;
-                           (yyval.expr_val).node = createBExpr((yyvsp[-2].expr_val).node, (yyvsp[0].expr_val).node, (yyvsp[-1].op_val));
+#line 253 "minic_temp.y"
+                         { 
+                           type_check((yyvsp[-2].element_val).type, (yyvsp[0].element_val).type);
+                           (yyval.element_val).ASTBExprNode = new ASTBExprNode((yyvsp[-2].element_val).ASTExprNode, (yyvsp[0].element_val).ASTExprNode, SUBTR);
+                           (yyval.element_val).type = INT_TYPE;
                          }
-#line 1341 "minic.tab.c"
+#line 1356 "minic.tab.c"
     break;
 
   case 38: /* bin_expr: expr MULT expr  */
-#line 232 "minic.y"
-                         { type_check((yyvsp[-2].expr_val).type, (yyvsp[0].expr_val).type);
-                           (yyval.expr_val).type = INT_TYPE;
-                           (yyval.expr_val).node = createBExpr((yyvsp[-2].expr_val).node, (yyvsp[0].expr_val).node, (yyvsp[-1].op_val));
+#line 258 "minic_temp.y"
+                         { 
+                           type_check((yyvsp[-2].element_val).type, (yyvsp[0].element_val).type);
+                           (yyval.element_val).ASTBExprNode = new ASTBExprNode((yyvsp[-2].element_val).ASTExprNode, (yyvsp[0].element_val).ASTExprNode,  MULTI);
+                           (yyval.element_val).type = INT_TYPE;
                          }
-#line 1350 "minic.tab.c"
+#line 1366 "minic.tab.c"
     break;
 
   case 39: /* bin_expr: expr DIV expr  */
-#line 236 "minic.y"
-                         { type_check((yyvsp[-2].expr_val).type, (yyvsp[0].expr_val).type);
-                           (yyval.expr_val).type = INT_TYPE;
-                           (yyval.expr_val).node = createBExpr((yyvsp[-2].expr_val).node, (yyvsp[0].expr_val).node, (yyvsp[-1].op_val));
+#line 263 "minic_temp.y"
+                         { 
+                           type_check((yyvsp[-2].element_val).type, (yyvsp[0].element_val).type);
+                           (yyval.element_val).ASTBExprNode = new ASTBExprNode((yyvsp[-2].element_val).ASTExprNode, (yyvsp[0].element_val).ASTExprNode, DIVIS);
+                           (yyval.element_val).type = INT_TYPE;
                          }
-#line 1359 "minic.tab.c"
+#line 1376 "minic.tab.c"
     break;
 
   case 40: /* unr_expr: SUB NAME  */
-#line 242 "minic.y"
+#line 271 "minic_temp.y"
                    { 
-                     if (var_dec_check(var_decs, (yyvsp[0].str_val))) {
-                       (yyval.expr_val).type = *(type_t*)hashtable_find(var_decs, (yyvsp[0].str_val));
+                     if (var_dec_check(var_decs, (yyvsp[0].element_val).name)) {
+                       (yyval.element_val).type = INT_TYPE;
                      }
-                     (yyval.expr_val).node = createUExpr(createVar((yyvsp[0].str_val)), (yyvsp[-1].op_val));
                    }
-#line 1370 "minic.tab.c"
+#line 1386 "minic.tab.c"
     break;
 
   case 41: /* unr_expr: SUB LPAR expr RPAR  */
-#line 248 "minic.y"
+#line 276 "minic_temp.y"
                              { 
-                               (yyval.expr_val).type = (yyvsp[-1].expr_val).type;
-                               (yyval.expr_val).node = createUExpr((yyvsp[-1].expr_val).node, (yyvsp[-3].op_val));
+                               (yyval.element_val).type = (yyvsp[-1].element_val).type;
+                               (yyval.element_val).ASTUExprNode = new ASTUExprNode((yyvsp[-1].element_val).ASTExprNode, NEG);
                              }
-#line 1379 "minic.tab.c"
+#line 1395 "minic.tab.c"
     break;
 
   case 42: /* fnc_call: NAME LPAR RPAR  */
-#line 256 "minic.y"
-                         { params_t params; params.size = 0; 
-                           if (fnc_dec_check(fnc_decs, (yyvsp[-2].str_val), params)) {
-                            (yyval.expr_val).type = (*(fnc_dec_t*)hashtable_find(fnc_decs, (yyvsp[-2].str_val))).ret_type;
+#line 284 "minic_temp.y"
+                         { 
+                           params_t params; params.size = 0; 
+                           if (fnc_dec_check(fnc_decs, (yyvsp[-2].element_val).name, params)) {
+                            (yyval.element_val).type = (*(fnc_dec_t*)hashtable_find(fnc_decs, (yyvsp[-2].element_val).name)).ret_type;
                            }
-                           (yyval.expr_val).node = createCall((yyvsp[-2].str_val), NULL);
+                           (yyval.element_val).ASTCallNode = new ASTCallNode(convertToString((yyvsp[-2].element_val).name), nullptr);
                          }
-#line 1390 "minic.tab.c"
+#line 1407 "minic.tab.c"
     break;
 
   case 43: /* fnc_call: NAME LPAR params RPAR  */
-#line 262 "minic.y"
-                                { if (fnc_dec_check(fnc_decs, (yyvsp[-3].str_val), (yyvsp[-1].params_val))) {
-                                    (yyval.expr_val).type = (*(fnc_dec_t*)hashtable_find(fnc_decs, (yyvsp[-3].str_val))).ret_type;
-                                  } 
-                                  (yyval.expr_val).node = createCall((yyvsp[-3].str_val), NULL);
+#line 291 "minic_temp.y"
+                                { 
+                                  if (fnc_dec_check(fnc_decs, (yyvsp[-3].element_val).name, (yyvsp[-1].element_val).params)) {
+                                    (yyval.element_val).type = (*(fnc_dec_t*)hashtable_find(fnc_decs, (yyvsp[-3].element_val).name)).ret_type;
+                                  }
+                                  (yyval.element_val).ASTCallNode = new ASTCallNode(convertToString((yyvsp[-3].element_val).name), nullptr); 
+                                  (yyval.element_val).ASTCallNode->print();
                                 }
-#line 1400 "minic.tab.c"
+#line 1419 "minic.tab.c"
     break;
 
   case 48: /* params: expr  */
-#line 291 "minic.y"
-             {(yyval.params_val).params[(yyval.params_val).size++] = (yyvsp[0].expr_val).type;}
-#line 1406 "minic.tab.c"
+#line 322 "minic_temp.y"
+             {(yyval.element_val).params.params[(yyval.element_val).params.size++] = (yyvsp[0].element_val).type;}
+#line 1425 "minic.tab.c"
     break;
 
   case 49: /* params: params COMMA expr  */
-#line 292 "minic.y"
+#line 323 "minic_temp.y"
                           {
-                            for (int i = 0; i < (yyvsp[-2].params_val).size; i++) {
-                              (yyval.params_val).params[i] = (yyvsp[-2].params_val).params[i];
+                            for (int i = 0; i < (yyvsp[-2].element_val).params.size; i++) {
+                              (yyval.element_val).params.params[i] = (yyvsp[-2].element_val).params.params[i];
                             }
-                            (yyval.params_val).size = (yyvsp[-2].params_val).size;
-                            (yyval.params_val).params[(yyval.params_val).size++] = (yyvsp[0].expr_val).type;
+                            (yyval.element_val).params.size = (yyvsp[-2].element_val).params.size;
+                            (yyval.element_val).params.params[(yyval.element_val).params.size++] = (yyvsp[0].element_val).type;
                           }
-#line 1418 "minic.tab.c"
+#line 1437 "minic.tab.c"
     break;
 
   case 50: /* conditional: expr comparator expr  */
-#line 302 "minic.y"
-                                  { type_check((yyvsp[-2].expr_val).type, (yyvsp[0].expr_val).type);
-                                    (yyval.expr_val).node = createRExpr((yyvsp[-2].expr_val).node, (yyvsp[0].expr_val).node, (yyvsp[-1].rop_val));
+#line 333 "minic_temp.y"
+                                  { 
+                                    type_check((yyvsp[-2].element_val).type, (yyvsp[0].element_val).type);
+                                    (yyval.element_val).ASTRExprNode =new ASTRExprNode((yyvsp[-2].element_val).ASTExprNode, (yyvsp[0].element_val).ASTExprNode, (yyvsp[0].element_val).rop);
                                   }
-#line 1426 "minic.tab.c"
+#line 1446 "minic.tab.c"
     break;
 
   case 51: /* comparator: EQEQ  */
-#line 308 "minic.y"
-                  {(yyval.rop_val) = eq;}
-#line 1432 "minic.tab.c"
+#line 340 "minic_temp.y"
+                  { (yyval.element_val).rop = DOUBEQ; }
+#line 1452 "minic.tab.c"
     break;
 
   case 52: /* comparator: NEQ  */
-#line 309 "minic.y"
-                  {(yyval.rop_val) = neq;}
-#line 1438 "minic.tab.c"
+#line 341 "minic_temp.y"
+                  { (yyval.element_val).rop = NOTEQ; }
+#line 1458 "minic.tab.c"
     break;
 
   case 53: /* comparator: GEQ  */
-#line 310 "minic.y"
-                  {(yyval.rop_val) = ge;}
-#line 1444 "minic.tab.c"
+#line 342 "minic_temp.y"
+                  { (yyval.element_val).rop = GREATEQ; }
+#line 1464 "minic.tab.c"
     break;
 
   case 54: /* comparator: LEQ  */
-#line 311 "minic.y"
-                  {(yyval.rop_val) = le;}
-#line 1450 "minic.tab.c"
+#line 343 "minic_temp.y"
+                  { (yyval.element_val).rop = LESSEQ; }
+#line 1470 "minic.tab.c"
     break;
 
   case 55: /* comparator: GREAT  */
-#line 312 "minic.y"
-                  {(yyval.rop_val) = gt;}
-#line 1456 "minic.tab.c"
+#line 344 "minic_temp.y"
+                  { (yyval.element_val).rop = GT; }
+#line 1476 "minic.tab.c"
     break;
 
   case 56: /* comparator: LESS  */
-#line 313 "minic.y"
-                  {(yyval.rop_val) = lt;}
-#line 1462 "minic.tab.c"
+#line 345 "minic_temp.y"
+                  { (yyval.element_val).rop = LT; }
+#line 1482 "minic.tab.c"
     break;
 
   case 57: /* type: INT  */
-#line 318 "minic.y"
-           {(yyval.type_val) = (yyvsp[0].type_val);}
-#line 1468 "minic.tab.c"
+#line 350 "minic_temp.y"
+           {(yyval.element_val) = (yyvsp[0].element_val);}
+#line 1488 "minic.tab.c"
     break;
 
   case 58: /* type: VOID  */
-#line 319 "minic.y"
-           {(yyval.type_val) = (yyvsp[0].type_val);}
-#line 1474 "minic.tab.c"
+#line 351 "minic_temp.y"
+           {(yyval.element_val) = (yyvsp[0].element_val);}
+#line 1494 "minic.tab.c"
+    break;
+
+  case 59: /* ret: RET  */
+#line 355 "minic_temp.y"
+              { (yyval.element_val).ASTRetNode = new ASTRetNode(nullptr); }
+#line 1500 "minic.tab.c"
+    break;
+
+  case 60: /* ret: RET expr  */
+#line 356 "minic_temp.y"
+              { (yyval.element_val).ASTRetNode = new ASTRetNode((yyvsp[0].element_val).ASTExprNode); }
+#line 1506 "minic.tab.c"
     break;
 
 
-#line 1478 "minic.tab.c"
+#line 1510 "minic.tab.c"
 
       default: break;
     }
@@ -1667,10 +1699,23 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 327 "minic.y"
+#line 359 "minic_temp.y"
 
 
-void var_dec(hashtable_t* var_decs, char *var_name, type_t var_type) {
+// converts character array
+// to string and returns it
+string* convertToString(char* a)
+{
+    int i;
+    int size = strlen(a);
+    string *s = new string("");
+    for (i = 0; i < size; i++) {
+        s->push_back(a[i]);
+    }
+    return s;
+}
+
+void var_dec(hashtable_t* var_decs, const char *var_name, type_t var_type) {
   if (hashtable_find(var_decs, var_name)) {
     fprintf(stderr, "<ERROR> Variable \'%s\' was previously declared.\n", var_name);
     return;
@@ -1681,7 +1726,7 @@ void var_dec(hashtable_t* var_decs, char *var_name, type_t var_type) {
   hashtable_insert(var_decs, var_name, new_var); 
 }
 
-bool var_dec_check(hashtable_t* var_decs, char *var_name) {
+bool var_dec_check(hashtable_t* var_decs, const char *var_name) {
   if(!(hashtable_find(var_decs, var_name))) { 
     fprintf(stderr, "<ERROR> Variable \'%s\' was not declared.\n", var_name); 
     return false;
@@ -1689,7 +1734,7 @@ bool var_dec_check(hashtable_t* var_decs, char *var_name) {
   return true;
 }
 
-void fnc_dec(hashtable_t* fnc_decs, char *fnc_name, type_t ret_type, params_t param_list) {
+void fnc_dec(hashtable_t* fnc_decs, const char *fnc_name, type_t ret_type, params_t param_list) {
   if (hashtable_find(fnc_decs, fnc_name)) {
     fprintf(stderr, "<ERROR> Function \'%s\' was previously declared.\n", fnc_name);
     return;
@@ -1704,7 +1749,7 @@ void fnc_dec(hashtable_t* fnc_decs, char *fnc_name, type_t ret_type, params_t pa
   hashtable_insert(fnc_decs, fnc_name, fnc_dec); 
 }
 
-bool fnc_dec_check(hashtable_t* fnc_decs, char *fnc_name, params_t params) {
+bool fnc_dec_check(hashtable_t* fnc_decs, const char *fnc_name, params_t params) {
   if(!(hashtable_find(fnc_decs, fnc_name))) { 
     fprintf(stderr, "<ERROR> Function \'%s\' was not declared.\n", fnc_name); 
     return false;
@@ -1734,7 +1779,7 @@ bool type_check(type_t expr1, type_t expr2) {
   return true;
 }
 
-bool assignment_check(hashtable_t* var_decs, char* var, type_t expr2) {
+bool assignment_check(hashtable_t* var_decs, const char* var, type_t expr2) {
   if(*(type_t*)hashtable_find(var_decs, var) != expr2) {
     fprintf(stderr, "<ERROR> Left hand side type does not match right hand side of expression.\n");
     return false;
@@ -1770,12 +1815,11 @@ int main (int argc, char **argv)
         //Hashtable to store function declarations
         fnc_decs = hashtable_new(MAX_VAR_DECS);
         var_decs = hashtable_new(MAX_VAR_DECS);
-        root = (astNode*)malloc(sizeof(astNode));
 
         //Parse input
         yyparse();
 
-        printNode(root, 0);
-
+        //Print AST
+        // root.print();
         return 0;
 }

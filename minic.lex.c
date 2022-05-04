@@ -565,9 +565,9 @@ static const flex_int16_t yy_rule_linenum[29] =
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "minic.l"
+#line 1 "minic_temp.l"
 /* minic.l */
-#line 4 "minic.l"
+#line 4 "minic_temp.l"
     #include "minic.tab.h"
     #include "ast_c/ast.h"
     #include <stdio.h>
@@ -854,7 +854,7 @@ YY_DECL
 
 	{
 /* %% [7.0] user's declarations go here */
-#line 43 "minic.l"
+#line 43 "minic_temp.l"
 
 
 #line 861 "minic.lex.c"
@@ -939,148 +939,148 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 45 "minic.l"
-{ printf("INT - %s\n", yytext); yylval.type_val = INT_TYPE; return INT; } 
+#line 45 "minic_temp.l"
+{ printf("INT - %s\n", yytext); yylval.element_val.type = INT_TYPE; return INT; } 
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 46 "minic.l"
-{ printf("VOID - %s\n", yytext); yylval.type_val = VOID_TYPE; return VOID; } 
+#line 46 "minic_temp.l"
+{ printf("VOID - %s\n", yytext); yylval.element_val.type = VOID_TYPE; return VOID; } 
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 47 "minic.l"
+#line 47 "minic_temp.l"
 { printf("EXTERN - %s\n", yytext); return EXTERN; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 48 "minic.l"
+#line 48 "minic_temp.l"
 { printf("RET - %s\n", yytext); return RET; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 49 "minic.l"
+#line 49 "minic_temp.l"
 { printf("WHILE - %s\n", yytext); return WHILE; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 50 "minic.l"
-{ printf("ADD - %s\n", yytext); yylval.op_val = add; return ADD; }
+#line 50 "minic_temp.l"
+{ printf("ADD - %s\n", yytext);  return ADD; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 51 "minic.l"
-{ printf("SUB - %s\n", yytext); yylval.op_val = sub; return SUB; }
+#line 51 "minic_temp.l"
+{ printf("SUB - %s\n", yytext); return SUB; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 52 "minic.l"
-{ printf("MULT - %s\n", yytext); yylval.op_val = mul; return MULT; }
+#line 52 "minic_temp.l"
+{ printf("MULT - %s\n", yytext); return MULT; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 53 "minic.l"
-{ printf("DIV - %s\n", yytext); yylval.op_val = divide; return DIV; }
+#line 53 "minic_temp.l"
+{ printf("DIV - %s\n", yytext); return DIV; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 54 "minic.l"
+#line 54 "minic_temp.l"
 { printf("IF - %s\n", yytext); return IF; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 55 "minic.l"
+#line 55 "minic_temp.l"
 { printf("ELSE - %s\n", yytext); return ELSE; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 56 "minic.l"
+#line 56 "minic_temp.l"
 { printf("SEMI - %s\n", yytext); return SEMI; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 57 "minic.l"
+#line 57 "minic_temp.l"
 { printf("EQEQ - %s\n", yytext); return EQEQ; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 58 "minic.l"
+#line 58 "minic_temp.l"
 { printf("GEQ - %s\n", yytext); return GEQ; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 59 "minic.l"
+#line 59 "minic_temp.l"
 { printf("LEQ - %s\n", yytext); return LEQ; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 60 "minic.l"
+#line 60 "minic_temp.l"
 { printf("LESS - %s\n", yytext); return LESS; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 61 "minic.l"
+#line 61 "minic_temp.l"
 { printf("GREAT - %s\n", yytext); return GREAT; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 62 "minic.l"
+#line 62 "minic_temp.l"
 { printf("NEQ - %s\n", yytext); return NEQ; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 63 "minic.l"
+#line 63 "minic_temp.l"
 { printf("LBRACK - %s\n", yytext); return LBRACK; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 64 "minic.l"
+#line 64 "minic_temp.l"
 { printf("RBRACK - %s\n", yytext); return RBRACK; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 65 "minic.l"
+#line 65 "minic_temp.l"
 { printf("LPAR - %s\n", yytext); return LPAR; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 66 "minic.l"
+#line 66 "minic_temp.l"
 { printf("RPAR - %s\n", yytext); return RPAR; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 67 "minic.l"
+#line 67 "minic_temp.l"
 { printf("COMMA - %s\n", yytext); return COMMA; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 68 "minic.l"
+#line 68 "minic_temp.l"
 { printf("EQ - %s\n", yytext); return EQ; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 69 "minic.l"
-{ printf("NUM - %s\n", yytext); yylval.num_val = atoi(yytext); return NUM; }
+#line 69 "minic_temp.l"
+{ printf("NUM - %s\n", yytext); yylval.element_val.ASTIntLiteralNode = new ASTIntLiteralNode(atoi(yytext)); return NUM; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 70 "minic.l"
-{ printf("NAME - %s\n", yytext); yylval.str_val = strdup(yytext); return NAME;}
+#line 70 "minic_temp.l"
+{ printf("NAME - %s\n", yytext); yylval.element_val.name = strdup(yytext); return NAME;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 71 "minic.l"
+#line 71 "minic_temp.l"
 
 	YY_BREAK
 case 28:
 /* rule 28 can match eol */
 YY_RULE_SETUP
-#line 72 "minic.l"
+#line 72 "minic_temp.l"
 
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 73 "minic.l"
+#line 73 "minic_temp.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
 #line 1087 "minic.lex.c"
@@ -2189,4 +2189,4 @@ void yyfree (void * ptr )
 
 /* %ok-for-header */
 
-#line 73 "minic.l"
+#line 73 "minic_temp.l"

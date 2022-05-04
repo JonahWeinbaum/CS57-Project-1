@@ -45,23 +45,20 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 20 "minic.y"
+#line 24 "minic_temp.y"
 
   #define MAX_PARAMS 6
   #define MAX_VAR_DECS 100
 
-  #include "ast_c/ast.h"
+  #include "ast_c++/ast.hpp"
   #include "hash/hashtable.h"
+
+  using namespace std;
 
   typedef enum type {
     INT_TYPE = 0,
     VOID_TYPE = 1
   } type_t;
-
-  typedef struct expr {
-    type_t type;
-    astNode* node;
-  } expr_t;
 
   typedef struct params {
     type_t params[MAX_PARAMS];
@@ -69,21 +66,44 @@ extern int yydebug;
   } params_t;
 
   typedef struct fnc_dec {
+    const char* fnc_name;
     params_t param_list;
     type_t ret_type; 
   } fnc_dec_t;
 
+  //Stores all necessary objects plus a node for
+  //each element
+  typedef struct object_node {
+    ASTAsgnNode *ASTAsgnNode;
+    ASTVarNode *ASTVarNode;
+    ASTIntLiteralNode *ASTIntLiteralNode;
+    ASTBExprNode *ASTBExprNode;
+    ASTRExprNode *ASTRExprNode;
+    ASTUExprNode *ASTUExprNode;
+    ASTRetNode *ASTRetNode;
+    ASTExprNode *ASTExprNode; 
+    ASTCallNode* ASTCallNode; 
+
+    type_t type;
+    char* name;
+    fnc_dec_t fnc_dec;
+    params_t params;
+    r_op_t   rop;
+  } type_node_t;
+
+
   //Helper Functions
-  void var_dec(hashtable_t* var_decs, char *var_name, type_t var_type);
-  bool var_dec_check(hashtable_t* var_decs, char *var_name);
-  void fnc_dec(hashtable_t* fnc_decs, char *fnc_name, type_t ret_type, params_t param_list);
-  bool fnc_dec_check(hashtable_t* fnc_decs, char *fnc_name, params_t params);
+  void var_dec(hashtable_t* var_decs, const char *var_name, type_t var_type);
+  bool var_dec_check(hashtable_t* var_decs, const char *var_name);
+  void fnc_dec(hashtable_t* fnc_decs, const char *fnc_name, type_t ret_type, params_t param_list);
+  bool fnc_dec_check(hashtable_t* fnc_decs, const char *fnc_name, params_t params);
   bool type_check(type_t expr1, type_t expr2);
-  bool assignment_check(hashtable_t* var_decs, char* var, type_t expr2);
+  bool assignment_check(hashtable_t* var_decs, const char* var, type_t expr2);
   void varprint(FILE* fp, const char* key, void* item);
   void fncprint(FILE* fp, const char* key, void* item);
+  string *convertToString(char* a);
 
-#line 87 "minic.tab.h"
+#line 107 "minic.tab.h"
 
 /* Token kinds.  */
 #ifndef YYTOKENTYPE
@@ -128,18 +148,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 58 "minic.y"
+#line 82 "minic_temp.y"
 
-  char* str_val;
-  int num_val;
-  type_t type_val;
-  expr_t expr_val;
-  rop_type rop_val;
-  op_type op_val;
-  params_t params_val;
-  fnc_dec_t fnc_dec_val;
+  const char* str_val;
+  object_node element_val;
 
-#line 143 "minic.tab.h"
+#line 157 "minic.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

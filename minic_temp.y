@@ -1,6 +1,7 @@
 %{
-  #include "ast_c/ast.h"
+  #include "ast_c++/ast.hpp"
   #include "hash/hashtable.h"
+  #include <string.h>
   #include <vector>
 
   using namespace std;
@@ -16,7 +17,7 @@
   hashtable_t *fnc_decs;
 
   //Root note
-  astNode* root;
+  ASTRootNode root = ASTRootNode(nullptr, nullptr, nullptr);
 %}
 
 //Data Types
@@ -24,18 +25,15 @@
   #define MAX_PARAMS 6
   #define MAX_VAR_DECS 100
 
-  #include "ast_c/ast.h"
+  #include "ast_c++/ast.hpp"
   #include "hash/hashtable.h"
+
+  using namespace std;
 
   typedef enum type {
     INT_TYPE = 0,
     VOID_TYPE = 1
   } type_t;
-
-  typedef struct expr {
-    type_t type;
-    astNode* node;
-  } expr_t;
 
   typedef struct params {
     type_t params[MAX_PARAMS];
@@ -48,11 +46,26 @@
     type_t ret_type; 
   } fnc_dec_t;
 
-  typedef struct if_struct {
-    astNode* node;
-    astNode* cond;
-    astNode* body; 
-  } if_t;
+  //Stores all necessary objects plus a node for
+  //each element
+  typedef struct object_node {
+    ASTAsgnNode *ASTAsgnNode;
+    ASTVarNode *ASTVarNode;
+    ASTIntLiteralNode *ASTIntLiteralNode;
+    ASTBExprNode *ASTBExprNode;
+    ASTRExprNode *ASTRExprNode;
+    ASTUExprNode *ASTUExprNode;
+    ASTRetNode *ASTRetNode;
+    ASTExprNode *ASTExprNode; 
+    ASTCallNode* ASTCallNode; 
+
+    type_t type;
+    char* name;
+    fnc_dec_t fnc_dec;
+    params_t params;
+    r_op_t   rop;
+  } type_node_t;
+
 
   //Helper Functions
   void var_dec(hashtable_t* var_decs, const char *var_name, type_t var_type);
@@ -63,54 +76,42 @@
   bool assignment_check(hashtable_t* var_decs, const char* var, type_t expr2);
   void varprint(FILE* fp, const char* key, void* item);
   void fncprint(FILE* fp, const char* key, void* item);
+  string *convertToString(char* a);
 }
 
 %union {
   const char* str_val;
-  int num_val;
-  type_t type_val;
-  expr_t expr_val;
-  if_t   if_val;
-  rop_type rop_val;
-  op_type  op_val;
-  params_t  params_val;
-  fnc_dec_t fnc_dec_val;
-  astNode* node_val;
+  object_node element_val;
 }
 
 //Nonterminal Types
-%type <type_val> type
-%type <expr_val> conditional
-%type <expr_val> expr
-%type <expr_val> bin_expr
-%type <expr_val> unr_expr
-%type <rop_val> comparator
-%type <params_val> params
-%type <params_val> param_decs
-%type <type_val> param_dec
-%type <fnc_dec_val> fnc_dec
-%type <expr_val> fnc_call
-%type <node_val> codeblocks
-%type <node_val> code 
-%type <if_val> if 
-%type <node_val> else 
-%type <node_val> ifelse 
-%type <node_val> while
-%type <node_val> ret 
-%type <node_val> assignment 
+%type <element_val> type
+%type <element_val> params
+%type <element_val> param_decs
+%type <element_val> param_dec
+%type <element_val> fnc_dec
+%type <element_val> expr
+%type <element_val> bin_expr
+%type <element_val> unr_expr
+%type <element_val> assignment
+%type <element_val> conditional
+%type <element_val> comparator
+%type <element_val> fnc_call
+%type <element_val> ret
+
 
 
 
 //Tokens
-%token <type_val> INT
-%token <type_val> VOID
+%token <element_val> INT
+%token <element_val> VOID
 %token EXTERN
 %token RET
 %token WHILE
-%token <op_val> ADD
-%token <op_val> SUB
-%token <op_val> MULT
-%token <op_val> DIV
+%token ADD
+%token SUB
+%token MULT
+%token DIV
 %token IF
 %token ELSE
 %token SEMI
@@ -126,8 +127,8 @@
 %token RPAR
 %token COMMA
 %token EQ
-%token <num_val> NUM
-%token <str_val> NAME
+%token <element_val> NUM
+%token <element_val> NAME
 
 //Precedence Rules
 %left ADD SUB
@@ -150,25 +151,25 @@ fnc_decs:
         ;
 
 fnc_dec: 
-         EXTERN type NAME LPAR param_decs RPAR { $$.fnc_name = $3; fnc_dec(fnc_decs, $3, $2, $5);}
-       | type NAME LPAR param_decs RPAR        { $$.fnc_name = $2; fnc_dec(fnc_decs, $2, $1, $4);}
-       | EXTERN type NAME LPAR RPAR            { $$.fnc_name = $3; params_t param; fnc_dec(fnc_decs, $3, $2,  param);}
-       | type NAME LPAR RPAR                   { $$.fnc_name = $2; params_t param; fnc_dec(fnc_decs, $2, $1,  param);}
+         EXTERN type NAME LPAR param_decs RPAR { $$.fnc_dec.fnc_name = $3.name; fnc_dec(fnc_decs, $3.name, $2.type, $5.params);}
+       | type NAME LPAR param_decs RPAR        { $$.fnc_dec.fnc_name = $2.name; fnc_dec(fnc_decs, $2.name, $1.type, $4.params);}
+       | EXTERN type NAME LPAR RPAR            { $$.fnc_dec.fnc_name = $3.name; params_t param; fnc_dec(fnc_decs, $3.name, $2.type, param);}
+       | type NAME LPAR RPAR                   { $$.fnc_dec.fnc_name = $2.name; params_t param; fnc_dec(fnc_decs, $2.name, $1.type, param);}
        ;
 
 param_decs:
-            param_dec                   {$$.params[$$.size++] = $1;}
+            param_dec                   {$$.params.params[$$.params.size++] = $1.type;}
           | param_decs COMMA param_dec  {
-                                          for (int i = 0; i < $1.size; i++) {
-                                            $$.params[i] = $1.params[i];
+                                          for (int i = 0; i < $1.params.size; i++) {
+                                            $$.params.params[i] = $1.params.params[i];
                                           }
-                                          $$.size = $1.size;
-                                          $$.params[$$.size++] = $3;
+                                          $$.params.size = $1.params.size;
+                                          $$.params.params[$$.params.size++] = $3.type;
                                         }
           ;
 param_dec: 
-           type      {$$ = $1;}
-         | type NAME {$$ = $1; var_dec(var_decs, $2, $1);}
+           type      { $$.type = $1.type; }
+         | type NAME { $$.type = $1.type; var_dec(var_decs, $2.name, $1.type); }
          ;
 
 //Function definitions
@@ -181,11 +182,11 @@ fncs:
 fnc: 
      fnc_dec LBRACK  
         codeblocks
-     RBRACK         { createFunc($1.fnc_name, NULL, $3); }
+     RBRACK
    | fnc_dec LBRACK 
         var_decs
         codeblocks
-     RBRACK         { createFunc($1.fnc_name, NULL, $4); }
+     RBRACK
    ;
 
 //Variable Declaration definitions
@@ -196,153 +197,151 @@ var_decs:
         ;
 
 var_dec:
-         type NAME { var_dec(var_decs, $2, $1);}
+         type NAME { var_dec(var_decs, $2.name, $1.type); }
        ; 
 
 //Code allowed inside functions
 codeblocks:
-            code            {
-                              vector<astNode*> stmt_list = {$1};
-                              $$ = createBlock(&stmt_list);
-                            }
-          | codeblocks code {
-                              $1->stmt.block.stmt_list->push_back($2);
-                              $$ = $1;
-                              root = $$;
-                             }
+            code
+          | codeblocks code
           ;
       
 code: 
-      expr SEMI       { $$ = $1.node; }
-    | assignment SEMI { $$ = $1; }
-    | if              { $$ = $1.node; }
-    | ifelse          { $$ = $1; }
-    | while           { $$ = $1; }
-    | ret SEMI        { $$ = $1; }
+      expr SEMI {$1.ASTExprNode->print();}     
+    | assignment SEMI 
+    | if              
+    | ifelse          
+    | while           
+    | ret SEMI        
     ; 
 
 //Blocks of code
 
 assignment:
            NAME EQ expr {
-                          var_dec_check(var_decs, $1);
-                          $$ = createAsgn(createVar($1), $3.node);
+                          var_dec_check(var_decs, $1.name);
+                          $$.ASTAsgnNode = new ASTAsgnNode(convertToString($1.name), $3.ASTExprNode);
                         }
           ;
             
 expr: 
        NAME { 
-              if (var_dec_check(var_decs, $1)) 
+              if (var_dec_check(var_decs, $1.name)) 
               {
-                $$.type = *(type_t*)hashtable_find(var_decs, $1);
-              }
-              $$.node = createVar($1);
+                $$.type = *(type_t*)hashtable_find(var_decs, $1.name);
+              } 
+              $$.ASTVarNode = new ASTVarNode(convertToString($1.name));
+              $$.ASTExprNode = $$.ASTVarNode;
             }
      | NUM  { 
               $$.type = INT_TYPE;
-              $$.node  = createCnst($1); 
+              $$.ASTIntLiteralNode = $1.ASTIntLiteralNode;
+              $$.ASTExprNode = $$.ASTIntLiteralNode;
             }
-     | bin_expr { $$ = $1; }
-     | unr_expr { $$ = $1; }
-     | fnc_call { $$ = $1; }
-     | LPAR expr RPAR { $$ = $2; }
+     | bin_expr { $$.ASTExprNode = $1.ASTBExprNode; }
+     | unr_expr { $$.ASTExprNode = $1.ASTUExprNode; }
+     | fnc_call { $$.ASTExprNode = $1.ASTCallNode; }
+     | LPAR expr RPAR { $$.ASTExprNode = $2.ASTExprNode; }
      ;
 
 bin_expr: 
-          expr ADD expr  { type_check($1.type, $3.type);
+          expr ADD expr  { 
+                           type_check($1.type, $3.type);
+                           $$.ASTBExprNode = new ASTBExprNode($1.ASTExprNode, $3.ASTExprNode, ADDIT);
                            $$.type = INT_TYPE;
-                           $$.node = createBExpr($1.node, $3.node, $2);
                          }
-        | expr SUB expr  { type_check($1.type, $3.type);
+        | expr SUB expr  { 
+                           type_check($1.type, $3.type);
+                           $$.ASTBExprNode = new ASTBExprNode($1.ASTExprNode, $3.ASTExprNode, SUBTR);
                            $$.type = INT_TYPE;
-                           $$.node = createBExpr($1.node, $3.node, $2);
                          }
-        | expr MULT expr { type_check($1.type, $3.type);
+        | expr MULT expr { 
+                           type_check($1.type, $3.type);
+                           $$.ASTBExprNode = new ASTBExprNode($1.ASTExprNode, $3.ASTExprNode,  MULTI);
                            $$.type = INT_TYPE;
-                           $$.node = createBExpr($1.node, $3.node, $2);
                          }
-        | expr DIV expr  { type_check($1.type, $3.type);
+        | expr DIV expr  { 
+                           type_check($1.type, $3.type);
+                           $$.ASTBExprNode = new ASTBExprNode($1.ASTExprNode, $3.ASTExprNode, DIVIS);
                            $$.type = INT_TYPE;
-                           $$.node = createBExpr($1.node, $3.node, $2);
                          }
   
+//TODO Fix
 unr_expr:
           SUB NAME { 
-                     if (var_dec_check(var_decs, $2)) {
-                       $$.type = *(type_t*)hashtable_find(var_decs, $2);
+                     if (var_dec_check(var_decs, $2.name)) {
+                       $$.type = INT_TYPE;
                      }
-                     $$.node = createUExpr(createVar($2), $1);
                    }
         | SUB LPAR expr RPAR { 
                                $$.type = $3.type;
-                               $$.node = createUExpr($3.node, $1);
+                               $$.ASTUExprNode = new ASTUExprNode($3.ASTExprNode, NEG);
                              }
         ;
 
 //UPDATE PARAMS SECTION 
 fnc_call:
-          NAME LPAR RPAR { params_t params; params.size = 0; 
-                           if (fnc_dec_check(fnc_decs, $1, params)) {
-                            $$.type = (*(fnc_dec_t*)hashtable_find(fnc_decs, $1)).ret_type;
+          NAME LPAR RPAR { 
+                           params_t params; params.size = 0; 
+                           if (fnc_dec_check(fnc_decs, $1.name, params)) {
+                            $$.type = (*(fnc_dec_t*)hashtable_find(fnc_decs, $1.name)).ret_type;
                            }
-                           $$.node = createCall($1, NULL);
+                           $$.ASTCallNode = new ASTCallNode(convertToString($1.name), nullptr);
                          }
-        | NAME LPAR params RPAR { if (fnc_dec_check(fnc_decs, $1, $3)) {
-                                    $$.type = (*(fnc_dec_t*)hashtable_find(fnc_decs, $1)).ret_type;
-                                  } 
-                                  $$.node = createCall($1, NULL);
+        | NAME LPAR params RPAR { 
+                                  if (fnc_dec_check(fnc_decs, $1.name, $3.params)) {
+                                    $$.type = (*(fnc_dec_t*)hashtable_find(fnc_decs, $1.name)).ret_type;
+                                  }
+                                  $$.ASTCallNode = new ASTCallNode(convertToString($1.name), nullptr); 
                                 }
         ;
 
 if:
     IF LPAR conditional RPAR LBRACK
       codeblocks
-    RBRACK                          {
-                                      $$.node = createIf($3.node, $6, NULL);
-                                      $$.cond = $3.node; 
-                                      $$.body = $6;
-                                    }
+    RBRACK
   ;
 
 else: 
       ELSE LBRACK
         codeblocks
-      RBRACK                        { $$ = $3; }
+      RBRACK            
     ;
 
 
-ifelse: if else {$$ = createIf($1.cond, $1.body, $2);}
+ifelse: if else
       ;
 
 while: WHILE LPAR conditional RPAR LBRACK
          codeblocks
-       RBRACK                             { $$ = createWhile($3.node, $6); }
+       RBRACK                       
      ;
 
 params:
-        expr {$$.params[$$.size++] = $1.type;}
+        expr {$$.params.params[$$.params.size++] = $1.type;}
       | params COMMA expr {
-                            for (int i = 0; i < $1.size; i++) {
-                              $$.params[i] = $1.params[i];
+                            for (int i = 0; i < $1.params.size; i++) {
+                              $$.params.params[i] = $1.params.params[i];
                             }
-                            $$.size = $1.size;
-                            $$.params[$$.size++] = $3.type;
+                            $$.params.size = $1.params.size;
+                            $$.params.params[$$.params.size++] = $3.type;
                           }
       ;
 
 conditional:
-             expr comparator expr { type_check($1.type, $3.type);
-                                    $$.node = createRExpr($1.node, $3.node, $2);
+             expr comparator expr { 
+                                    type_check($1.type, $3.type);
+                                    $$.ASTRExprNode =new ASTRExprNode($1.ASTExprNode, $3.ASTExprNode, $3.rop);
                                   }
            ;
 
 comparator: 
-            EQEQ  {$$ = eq;}
-          | NEQ   {$$ = neq;}
-          | GEQ   {$$ = ge;}
-          | LEQ   {$$ = le;}
-          | GREAT {$$ = gt;}
-          | LESS  {$$ = lt;}
+            EQEQ  { $$.rop = DOUBEQ; } 
+          | NEQ   { $$.rop = NOTEQ; } 
+          | GEQ   { $$.rop = GREATEQ; } 
+          | LEQ   { $$.rop = LESSEQ; } 
+          | GREAT { $$.rop = GT; } 
+          | LESS  { $$.rop = LT; } 
           ;
 
 //General Use Defintions
@@ -352,11 +351,24 @@ type:
     ;
 
 ret:
-     RET      {$$ = createRet(NULL);}
-   | RET expr {$$ = createRet($2.node);}
+     RET      { $$.ASTRetNode = new ASTRetNode(nullptr); }
+   | RET expr { $$.ASTRetNode = new ASTRetNode($2.ASTExprNode); }
    ;
 
 %%
+
+// converts character array
+// to string and returns it
+string* convertToString(char* a)
+{
+    int i;
+    int size = strlen(a);
+    string *s = new string("");
+    for (i = 0; i < size; i++) {
+        s->push_back(a[i]);
+    }
+    return s;
+}
 
 void var_dec(hashtable_t* var_decs, const char *var_name, type_t var_type) {
   if (hashtable_find(var_decs, var_name)) {
@@ -458,12 +470,11 @@ int main (int argc, char **argv)
         //Hashtable to store function declarations
         fnc_decs = hashtable_new(MAX_VAR_DECS);
         var_decs = hashtable_new(MAX_VAR_DECS);
-        root = (astNode*)malloc(sizeof(astNode));
 
         //Parse input
         yyparse();
 
-        printNode(root, 0);
-
+        //Print AST
+        // root.print();
         return 0;
 }
