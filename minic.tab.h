@@ -83,6 +83,10 @@ extern int yydebug;
     ASTRetNode *ASTRetNode;
     ASTExprNode *ASTExprNode; 
     ASTCallNode* ASTCallNode; 
+    ASTStmtNode *ASTStmtNode;
+    ASTIfNode *ASTIfNode;
+    ASTWhileNode *ASTWhileNode;
+    ASTBlockNode *ASTBlockNode;
 
     type_t type;
     char* name;
@@ -103,7 +107,7 @@ extern int yydebug;
   void fncprint(FILE* fp, const char* key, void* item);
   string *convertToString(char* a);
 
-#line 107 "minic.tab.h"
+#line 111 "minic.tab.h"
 
 /* Token kinds.  */
 #ifndef YYTOKENTYPE
@@ -148,12 +152,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 82 "minic_temp.y"
+#line 86 "minic_temp.y"
 
   const char* str_val;
   object_node element_val;
 
-#line 157 "minic.tab.h"
+#line 161 "minic.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

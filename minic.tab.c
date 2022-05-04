@@ -560,13 +560,13 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,   143,   143,   144,   149,   150,   154,   155,   156,   157,
-     161,   162,   171,   172,   177,   178,   183,   186,   195,   196,
-     200,   205,   206,   210,   211,   212,   213,   214,   215,   221,
-     228,   236,   241,   242,   243,   244,   248,   253,   258,   263,
-     271,   276,   284,   291,   301,   307,   313,   316,   322,   323,
-     333,   340,   341,   342,   343,   344,   345,   350,   351,   355,
-     356
+       0,   153,   153,   154,   159,   160,   164,   165,   166,   167,
+     171,   172,   181,   182,   187,   188,   193,   196,   205,   206,
+     210,   215,   220,   228,   229,   230,   231,   232,   238,   245,
+     253,   258,   259,   260,   261,   265,   270,   275,   280,   288,
+     293,   301,   308,   317,   326,   333,   334,   337,   343,   344,
+     354,   361,   362,   363,   364,   365,   366,   371,   372,   376,
+     377
 };
 #endif
 
@@ -634,16 +634,16 @@ static const yytype_int8 yydefact[] =
 {
        0,    57,    58,     0,     0,     0,     0,     2,    14,     0,
        0,     1,     0,     3,     4,     0,     0,    15,     0,     0,
-       5,    59,     0,     0,     0,     0,    31,    30,     0,     0,
-       0,    21,     0,     0,    32,    33,    34,    25,    26,    27,
-       0,     0,     0,     0,    30,    60,     0,     0,    40,     0,
+       5,    59,     0,     0,     0,     0,    30,    29,     0,     0,
+       0,    21,     0,     0,    31,    32,    33,    45,    25,    26,
+       0,     0,     0,     0,    29,    60,     0,     0,    39,     0,
        0,     0,     0,     0,     0,    18,    16,    22,    24,     0,
-       0,     0,     0,    23,     0,    46,    20,    28,     9,     0,
-      10,    12,     8,     0,     0,     0,     0,     0,    35,    42,
-      48,     0,    29,    19,    17,    36,    37,    38,    39,     0,
+       0,     0,     0,    23,     0,    46,    20,    27,     9,     0,
+      10,    12,     8,     0,     0,     0,     0,     0,    34,    41,
+      48,     0,    28,    19,    17,    35,    36,    37,    38,     0,
        7,     0,    13,     6,    51,    53,    54,    56,    55,    52,
-       0,     0,    41,     0,    43,     0,     0,    11,    50,     0,
-       0,    49,    45,     0,     0,    47,    44
+       0,     0,    40,     0,    42,     0,     0,    11,    50,     0,
+       0,    49,    44,     0,     0,    47,    43
 };
 
 /* YYPGOTO[NTERM-NUM].  */
@@ -734,9 +734,9 @@ static const yytype_int8 yyr1[] =
 {
        0,    29,    30,    30,    31,    31,    32,    32,    32,    32,
       33,    33,    34,    34,    35,    35,    36,    36,    37,    37,
-      38,    39,    39,    40,    40,    40,    40,    40,    40,    41,
-      42,    42,    42,    42,    42,    42,    43,    43,    43,    43,
-      44,    44,    45,    45,    46,    47,    48,    49,    50,    50,
+      38,    39,    39,    40,    40,    40,    40,    40,    41,    42,
+      42,    42,    42,    42,    42,    43,    43,    43,    43,    44,
+      44,    45,    45,    46,    47,    48,    48,    49,    50,    50,
       51,    52,    52,    52,    52,    52,    52,    53,    53,    54,
       54
 };
@@ -746,9 +746,9 @@ static const yytype_int8 yyr2[] =
 {
        0,     2,     1,     2,     2,     3,     6,     5,     5,     4,
        1,     3,     1,     2,     1,     2,     4,     5,     2,     3,
-       2,     1,     2,     2,     2,     1,     1,     1,     2,     3,
-       1,     1,     1,     1,     1,     3,     3,     3,     3,     3,
-       2,     4,     3,     4,     7,     4,     2,     7,     1,     3,
+       2,     1,     2,     2,     2,     1,     1,     2,     3,     1,
+       1,     1,     1,     1,     3,     3,     3,     3,     3,     2,
+       4,     3,     4,     7,     4,     1,     2,     7,     1,     3,
        3,     1,     1,     1,     1,     1,     1,     1,     1,     1,
        2
 };
@@ -1214,37 +1214,37 @@ yyreduce:
   switch (yyn)
     {
   case 6: /* fnc_dec: EXTERN type NAME LPAR param_decs RPAR  */
-#line 154 "minic_temp.y"
+#line 164 "minic_temp.y"
                                                { (yyval.element_val).fnc_dec.fnc_name = (yyvsp[-3].element_val).name; fnc_dec(fnc_decs, (yyvsp[-3].element_val).name, (yyvsp[-4].element_val).type, (yyvsp[-1].element_val).params);}
 #line 1220 "minic.tab.c"
     break;
 
   case 7: /* fnc_dec: type NAME LPAR param_decs RPAR  */
-#line 155 "minic_temp.y"
+#line 165 "minic_temp.y"
                                                { (yyval.element_val).fnc_dec.fnc_name = (yyvsp[-3].element_val).name; fnc_dec(fnc_decs, (yyvsp[-3].element_val).name, (yyvsp[-4].element_val).type, (yyvsp[-1].element_val).params);}
 #line 1226 "minic.tab.c"
     break;
 
   case 8: /* fnc_dec: EXTERN type NAME LPAR RPAR  */
-#line 156 "minic_temp.y"
+#line 166 "minic_temp.y"
                                                { (yyval.element_val).fnc_dec.fnc_name = (yyvsp[-2].element_val).name; params_t param; fnc_dec(fnc_decs, (yyvsp[-2].element_val).name, (yyvsp[-3].element_val).type, param);}
 #line 1232 "minic.tab.c"
     break;
 
   case 9: /* fnc_dec: type NAME LPAR RPAR  */
-#line 157 "minic_temp.y"
+#line 167 "minic_temp.y"
                                                { (yyval.element_val).fnc_dec.fnc_name = (yyvsp[-2].element_val).name; params_t param; fnc_dec(fnc_decs, (yyvsp[-2].element_val).name, (yyvsp[-3].element_val).type, param);}
 #line 1238 "minic.tab.c"
     break;
 
   case 10: /* param_decs: param_dec  */
-#line 161 "minic_temp.y"
+#line 171 "minic_temp.y"
                                         {(yyval.element_val).params.params[(yyval.element_val).params.size++] = (yyvsp[0].element_val).type;}
 #line 1244 "minic.tab.c"
     break;
 
   case 11: /* param_decs: param_decs COMMA param_dec  */
-#line 162 "minic_temp.y"
+#line 172 "minic_temp.y"
                                         {
                                           for (int i = 0; i < (yyvsp[-2].element_val).params.size; i++) {
                                             (yyval.element_val).params.params[i] = (yyvsp[-2].element_val).params.params[i];
@@ -1256,40 +1256,84 @@ yyreduce:
     break;
 
   case 12: /* param_dec: type  */
-#line 171 "minic_temp.y"
+#line 181 "minic_temp.y"
                      { (yyval.element_val).type = (yyvsp[0].element_val).type; }
 #line 1262 "minic.tab.c"
     break;
 
   case 13: /* param_dec: type NAME  */
-#line 172 "minic_temp.y"
+#line 182 "minic_temp.y"
                      { (yyval.element_val).type = (yyvsp[-1].element_val).type; var_dec(var_decs, (yyvsp[0].element_val).name, (yyvsp[-1].element_val).type); }
 #line 1268 "minic.tab.c"
     break;
 
   case 20: /* var_dec: type NAME  */
-#line 200 "minic_temp.y"
+#line 210 "minic_temp.y"
                    { var_dec(var_decs, (yyvsp[0].element_val).name, (yyvsp[-1].element_val).type); }
 #line 1274 "minic.tab.c"
     break;
 
-  case 23: /* code: expr SEMI  */
-#line 210 "minic_temp.y"
-                {(yyvsp[-1].element_val).ASTExprNode->print();}
-#line 1280 "minic.tab.c"
+  case 21: /* codeblocks: code  */
+#line 215 "minic_temp.y"
+                 { 
+                   vector<ASTStmtNode*> *stmt_list = new vector<ASTStmtNode*>(); 
+                   stmt_list->push_back((yyvsp[0].element_val).ASTStmtNode); 
+                   (yyval.element_val).ASTBlockNode = new ASTBlockNode(stmt_list);
+                 }
+#line 1284 "minic.tab.c"
     break;
 
-  case 29: /* assignment: NAME EQ expr  */
-#line 221 "minic_temp.y"
+  case 22: /* codeblocks: codeblocks code  */
+#line 220 "minic_temp.y"
+                            {
+                              (yyvsp[-1].element_val).ASTBlockNode->stmt_list->push_back((yyvsp[0].element_val).ASTStmtNode);
+                              (yyval.element_val).ASTBlockNode->stmt_list = (yyvsp[-1].element_val).ASTBlockNode->stmt_list;
+                              (yyval.element_val).ASTBlockNode->print();
+                            }
+#line 1294 "minic.tab.c"
+    break;
+
+  case 23: /* code: expr SEMI  */
+#line 228 "minic_temp.y"
+                      { (yyval.element_val).ASTStmtNode = (yyvsp[-1].element_val).ASTExprNode; }
+#line 1300 "minic.tab.c"
+    break;
+
+  case 24: /* code: assignment SEMI  */
+#line 229 "minic_temp.y"
+                      { (yyval.element_val).ASTStmtNode = (yyvsp[-1].element_val).ASTAsgnNode; }
+#line 1306 "minic.tab.c"
+    break;
+
+  case 25: /* code: ifelse  */
+#line 230 "minic_temp.y"
+                      { (yyval.element_val).ASTStmtNode = (yyvsp[0].element_val).ASTIfNode; }
+#line 1312 "minic.tab.c"
+    break;
+
+  case 26: /* code: while  */
+#line 231 "minic_temp.y"
+                      { (yyval.element_val).ASTStmtNode = (yyvsp[0].element_val).ASTWhileNode; }
+#line 1318 "minic.tab.c"
+    break;
+
+  case 27: /* code: ret SEMI  */
+#line 232 "minic_temp.y"
+                      { (yyval.element_val).ASTStmtNode = (yyvsp[-1].element_val).ASTRetNode; }
+#line 1324 "minic.tab.c"
+    break;
+
+  case 28: /* assignment: NAME EQ expr  */
+#line 238 "minic_temp.y"
                         {
                           var_dec_check(var_decs, (yyvsp[-2].element_val).name);
                           (yyval.element_val).ASTAsgnNode = new ASTAsgnNode(convertToString((yyvsp[-2].element_val).name), (yyvsp[0].element_val).ASTExprNode);
                         }
-#line 1289 "minic.tab.c"
+#line 1333 "minic.tab.c"
     break;
 
-  case 30: /* expr: NAME  */
-#line 228 "minic_temp.y"
+  case 29: /* expr: NAME  */
+#line 245 "minic_temp.y"
             { 
               if (var_dec_check(var_decs, (yyvsp[0].element_val).name)) 
               {
@@ -1298,104 +1342,104 @@ yyreduce:
               (yyval.element_val).ASTVarNode = new ASTVarNode(convertToString((yyvsp[0].element_val).name));
               (yyval.element_val).ASTExprNode = (yyval.element_val).ASTVarNode;
             }
-#line 1302 "minic.tab.c"
+#line 1346 "minic.tab.c"
     break;
 
-  case 31: /* expr: NUM  */
-#line 236 "minic_temp.y"
+  case 30: /* expr: NUM  */
+#line 253 "minic_temp.y"
             { 
               (yyval.element_val).type = INT_TYPE;
               (yyval.element_val).ASTIntLiteralNode = (yyvsp[0].element_val).ASTIntLiteralNode;
               (yyval.element_val).ASTExprNode = (yyval.element_val).ASTIntLiteralNode;
             }
-#line 1312 "minic.tab.c"
+#line 1356 "minic.tab.c"
     break;
 
-  case 32: /* expr: bin_expr  */
-#line 241 "minic_temp.y"
+  case 31: /* expr: bin_expr  */
+#line 258 "minic_temp.y"
                 { (yyval.element_val).ASTExprNode = (yyvsp[0].element_val).ASTBExprNode; }
-#line 1318 "minic.tab.c"
+#line 1362 "minic.tab.c"
     break;
 
-  case 33: /* expr: unr_expr  */
-#line 242 "minic_temp.y"
+  case 32: /* expr: unr_expr  */
+#line 259 "minic_temp.y"
                 { (yyval.element_val).ASTExprNode = (yyvsp[0].element_val).ASTUExprNode; }
-#line 1324 "minic.tab.c"
+#line 1368 "minic.tab.c"
     break;
 
-  case 34: /* expr: fnc_call  */
-#line 243 "minic_temp.y"
+  case 33: /* expr: fnc_call  */
+#line 260 "minic_temp.y"
                 { (yyval.element_val).ASTExprNode = (yyvsp[0].element_val).ASTCallNode; }
-#line 1330 "minic.tab.c"
+#line 1374 "minic.tab.c"
     break;
 
-  case 35: /* expr: LPAR expr RPAR  */
-#line 244 "minic_temp.y"
+  case 34: /* expr: LPAR expr RPAR  */
+#line 261 "minic_temp.y"
                       { (yyval.element_val).ASTExprNode = (yyvsp[-1].element_val).ASTExprNode; }
-#line 1336 "minic.tab.c"
+#line 1380 "minic.tab.c"
     break;
 
-  case 36: /* bin_expr: expr ADD expr  */
-#line 248 "minic_temp.y"
+  case 35: /* bin_expr: expr ADD expr  */
+#line 265 "minic_temp.y"
                          { 
                            type_check((yyvsp[-2].element_val).type, (yyvsp[0].element_val).type);
                            (yyval.element_val).ASTBExprNode = new ASTBExprNode((yyvsp[-2].element_val).ASTExprNode, (yyvsp[0].element_val).ASTExprNode, ADDIT);
                            (yyval.element_val).type = INT_TYPE;
                          }
-#line 1346 "minic.tab.c"
+#line 1390 "minic.tab.c"
     break;
 
-  case 37: /* bin_expr: expr SUB expr  */
-#line 253 "minic_temp.y"
+  case 36: /* bin_expr: expr SUB expr  */
+#line 270 "minic_temp.y"
                          { 
                            type_check((yyvsp[-2].element_val).type, (yyvsp[0].element_val).type);
                            (yyval.element_val).ASTBExprNode = new ASTBExprNode((yyvsp[-2].element_val).ASTExprNode, (yyvsp[0].element_val).ASTExprNode, SUBTR);
                            (yyval.element_val).type = INT_TYPE;
                          }
-#line 1356 "minic.tab.c"
+#line 1400 "minic.tab.c"
     break;
 
-  case 38: /* bin_expr: expr MULT expr  */
-#line 258 "minic_temp.y"
+  case 37: /* bin_expr: expr MULT expr  */
+#line 275 "minic_temp.y"
                          { 
                            type_check((yyvsp[-2].element_val).type, (yyvsp[0].element_val).type);
                            (yyval.element_val).ASTBExprNode = new ASTBExprNode((yyvsp[-2].element_val).ASTExprNode, (yyvsp[0].element_val).ASTExprNode,  MULTI);
                            (yyval.element_val).type = INT_TYPE;
                          }
-#line 1366 "minic.tab.c"
+#line 1410 "minic.tab.c"
     break;
 
-  case 39: /* bin_expr: expr DIV expr  */
-#line 263 "minic_temp.y"
+  case 38: /* bin_expr: expr DIV expr  */
+#line 280 "minic_temp.y"
                          { 
                            type_check((yyvsp[-2].element_val).type, (yyvsp[0].element_val).type);
                            (yyval.element_val).ASTBExprNode = new ASTBExprNode((yyvsp[-2].element_val).ASTExprNode, (yyvsp[0].element_val).ASTExprNode, DIVIS);
                            (yyval.element_val).type = INT_TYPE;
                          }
-#line 1376 "minic.tab.c"
+#line 1420 "minic.tab.c"
     break;
 
-  case 40: /* unr_expr: SUB NAME  */
-#line 271 "minic_temp.y"
+  case 39: /* unr_expr: SUB NAME  */
+#line 288 "minic_temp.y"
                    { 
                      if (var_dec_check(var_decs, (yyvsp[0].element_val).name)) {
                        (yyval.element_val).type = INT_TYPE;
                      }
                    }
-#line 1386 "minic.tab.c"
+#line 1430 "minic.tab.c"
     break;
 
-  case 41: /* unr_expr: SUB LPAR expr RPAR  */
-#line 276 "minic_temp.y"
+  case 40: /* unr_expr: SUB LPAR expr RPAR  */
+#line 293 "minic_temp.y"
                              { 
                                (yyval.element_val).type = (yyvsp[-1].element_val).type;
                                (yyval.element_val).ASTUExprNode = new ASTUExprNode((yyvsp[-1].element_val).ASTExprNode, NEG);
                              }
-#line 1395 "minic.tab.c"
+#line 1439 "minic.tab.c"
     break;
 
-  case 42: /* fnc_call: NAME LPAR RPAR  */
-#line 284 "minic_temp.y"
+  case 41: /* fnc_call: NAME LPAR RPAR  */
+#line 301 "minic_temp.y"
                          { 
                            params_t params; params.size = 0; 
                            if (fnc_dec_check(fnc_decs, (yyvsp[-2].element_val).name, params)) {
@@ -1403,29 +1447,61 @@ yyreduce:
                            }
                            (yyval.element_val).ASTCallNode = new ASTCallNode(convertToString((yyvsp[-2].element_val).name), nullptr);
                          }
-#line 1407 "minic.tab.c"
+#line 1451 "minic.tab.c"
     break;
 
-  case 43: /* fnc_call: NAME LPAR params RPAR  */
-#line 291 "minic_temp.y"
+  case 42: /* fnc_call: NAME LPAR params RPAR  */
+#line 308 "minic_temp.y"
                                 { 
                                   if (fnc_dec_check(fnc_decs, (yyvsp[-3].element_val).name, (yyvsp[-1].element_val).params)) {
                                     (yyval.element_val).type = (*(fnc_dec_t*)hashtable_find(fnc_decs, (yyvsp[-3].element_val).name)).ret_type;
                                   }
                                   (yyval.element_val).ASTCallNode = new ASTCallNode(convertToString((yyvsp[-3].element_val).name), nullptr); 
-                                  (yyval.element_val).ASTCallNode->print();
                                 }
-#line 1419 "minic.tab.c"
+#line 1462 "minic.tab.c"
+    break;
+
+  case 43: /* if: IF LPAR conditional RPAR LBRACK codeblocks RBRACK  */
+#line 319 "minic_temp.y"
+                                     { 
+                                       (yyval.element_val).ASTExprNode = (yyvsp[-4].element_val).ASTRExprNode; 
+                                       (yyval.element_val).ASTBlockNode = (yyvsp[-1].element_val).ASTBlockNode; 
+                                     }
+#line 1471 "minic.tab.c"
+    break;
+
+  case 44: /* else: ELSE LBRACK codeblocks RBRACK  */
+#line 328 "minic_temp.y"
+                                     { (yyval.element_val).ASTBlockNode = (yyvsp[-1].element_val).ASTBlockNode; }
+#line 1477 "minic.tab.c"
+    break;
+
+  case 45: /* ifelse: if  */
+#line 333 "minic_temp.y"
+                  { (yyval.element_val).ASTIfNode = new ASTIfNode((yyvsp[0].element_val).ASTExprNode, (yyvsp[0].element_val).ASTBlockNode, new ASTBlockNode()); }
+#line 1483 "minic.tab.c"
+    break;
+
+  case 46: /* ifelse: if else  */
+#line 334 "minic_temp.y"
+                  { (yyval.element_val).ASTIfNode = new ASTIfNode((yyvsp[-1].element_val).ASTExprNode, (yyvsp[-1].element_val).ASTBlockNode, (yyvsp[0].element_val).ASTBlockNode); }
+#line 1489 "minic.tab.c"
+    break;
+
+  case 47: /* while: WHILE LPAR conditional RPAR LBRACK codeblocks RBRACK  */
+#line 339 "minic_temp.y"
+                                          { (yyval.element_val).ASTWhileNode = new ASTWhileNode((yyvsp[-4].element_val).ASTRExprNode, (yyvsp[-1].element_val).ASTBlockNode); }
+#line 1495 "minic.tab.c"
     break;
 
   case 48: /* params: expr  */
-#line 322 "minic_temp.y"
+#line 343 "minic_temp.y"
              {(yyval.element_val).params.params[(yyval.element_val).params.size++] = (yyvsp[0].element_val).type;}
-#line 1425 "minic.tab.c"
+#line 1501 "minic.tab.c"
     break;
 
   case 49: /* params: params COMMA expr  */
-#line 323 "minic_temp.y"
+#line 344 "minic_temp.y"
                           {
                             for (int i = 0; i < (yyvsp[-2].element_val).params.size; i++) {
                               (yyval.element_val).params.params[i] = (yyvsp[-2].element_val).params.params[i];
@@ -1433,80 +1509,80 @@ yyreduce:
                             (yyval.element_val).params.size = (yyvsp[-2].element_val).params.size;
                             (yyval.element_val).params.params[(yyval.element_val).params.size++] = (yyvsp[0].element_val).type;
                           }
-#line 1437 "minic.tab.c"
+#line 1513 "minic.tab.c"
     break;
 
   case 50: /* conditional: expr comparator expr  */
-#line 333 "minic_temp.y"
+#line 354 "minic_temp.y"
                                   { 
                                     type_check((yyvsp[-2].element_val).type, (yyvsp[0].element_val).type);
                                     (yyval.element_val).ASTRExprNode =new ASTRExprNode((yyvsp[-2].element_val).ASTExprNode, (yyvsp[0].element_val).ASTExprNode, (yyvsp[0].element_val).rop);
                                   }
-#line 1446 "minic.tab.c"
+#line 1522 "minic.tab.c"
     break;
 
   case 51: /* comparator: EQEQ  */
-#line 340 "minic_temp.y"
+#line 361 "minic_temp.y"
                   { (yyval.element_val).rop = DOUBEQ; }
-#line 1452 "minic.tab.c"
+#line 1528 "minic.tab.c"
     break;
 
   case 52: /* comparator: NEQ  */
-#line 341 "minic_temp.y"
+#line 362 "minic_temp.y"
                   { (yyval.element_val).rop = NOTEQ; }
-#line 1458 "minic.tab.c"
+#line 1534 "minic.tab.c"
     break;
 
   case 53: /* comparator: GEQ  */
-#line 342 "minic_temp.y"
+#line 363 "minic_temp.y"
                   { (yyval.element_val).rop = GREATEQ; }
-#line 1464 "minic.tab.c"
+#line 1540 "minic.tab.c"
     break;
 
   case 54: /* comparator: LEQ  */
-#line 343 "minic_temp.y"
+#line 364 "minic_temp.y"
                   { (yyval.element_val).rop = LESSEQ; }
-#line 1470 "minic.tab.c"
+#line 1546 "minic.tab.c"
     break;
 
   case 55: /* comparator: GREAT  */
-#line 344 "minic_temp.y"
+#line 365 "minic_temp.y"
                   { (yyval.element_val).rop = GT; }
-#line 1476 "minic.tab.c"
+#line 1552 "minic.tab.c"
     break;
 
   case 56: /* comparator: LESS  */
-#line 345 "minic_temp.y"
+#line 366 "minic_temp.y"
                   { (yyval.element_val).rop = LT; }
-#line 1482 "minic.tab.c"
+#line 1558 "minic.tab.c"
     break;
 
   case 57: /* type: INT  */
-#line 350 "minic_temp.y"
+#line 371 "minic_temp.y"
            {(yyval.element_val) = (yyvsp[0].element_val);}
-#line 1488 "minic.tab.c"
+#line 1564 "minic.tab.c"
     break;
 
   case 58: /* type: VOID  */
-#line 351 "minic_temp.y"
+#line 372 "minic_temp.y"
            {(yyval.element_val) = (yyvsp[0].element_val);}
-#line 1494 "minic.tab.c"
+#line 1570 "minic.tab.c"
     break;
 
   case 59: /* ret: RET  */
-#line 355 "minic_temp.y"
+#line 376 "minic_temp.y"
               { (yyval.element_val).ASTRetNode = new ASTRetNode(nullptr); }
-#line 1500 "minic.tab.c"
+#line 1576 "minic.tab.c"
     break;
 
   case 60: /* ret: RET expr  */
-#line 356 "minic_temp.y"
+#line 377 "minic_temp.y"
               { (yyval.element_val).ASTRetNode = new ASTRetNode((yyvsp[0].element_val).ASTExprNode); }
-#line 1506 "minic.tab.c"
+#line 1582 "minic.tab.c"
     break;
 
 
-#line 1510 "minic.tab.c"
+#line 1586 "minic.tab.c"
 
       default: break;
     }
@@ -1699,7 +1775,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 359 "minic_temp.y"
+#line 380 "minic_temp.y"
 
 
 // converts character array

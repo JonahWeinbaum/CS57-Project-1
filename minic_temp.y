@@ -58,6 +58,10 @@
     ASTRetNode *ASTRetNode;
     ASTExprNode *ASTExprNode; 
     ASTCallNode* ASTCallNode; 
+    ASTStmtNode *ASTStmtNode;
+    ASTIfNode *ASTIfNode;
+    ASTWhileNode *ASTWhileNode;
+    ASTBlockNode *ASTBlockNode;
 
     type_t type;
     char* name;
@@ -89,8 +93,14 @@
 %type <element_val> params
 %type <element_val> param_decs
 %type <element_val> param_dec
+%type <element_val> codeblocks
+%type <element_val> code
 %type <element_val> fnc_dec
 %type <element_val> expr
+%type <element_val> if
+%type <element_val> else
+%type <element_val> ifelse
+%type <element_val> while
 %type <element_val> bin_expr
 %type <element_val> unr_expr
 %type <element_val> assignment
@@ -181,12 +191,12 @@ fncs:
 //TODO Fix params
 fnc: 
      fnc_dec LBRACK  
-        codeblocks
+        codeblocks 
      RBRACK
    | fnc_dec LBRACK 
         var_decs
         codeblocks
-     RBRACK
+     RBRACK    
    ;
 
 //Variable Declaration definitions
@@ -202,17 +212,24 @@ var_dec:
 
 //Code allowed inside functions
 codeblocks:
-            code
-          | codeblocks code
+            code { 
+                   vector<ASTStmtNode*> *stmt_list = new vector<ASTStmtNode*>(); 
+                   stmt_list->push_back($1.ASTStmtNode); 
+                   $$.ASTBlockNode = new ASTBlockNode(stmt_list);
+                 }
+          | codeblocks code {
+                              $1.ASTBlockNode->stmt_list->push_back($2.ASTStmtNode);
+                              $$.ASTBlockNode->stmt_list = $1.ASTBlockNode->stmt_list;
+                              $$.ASTBlockNode->print();
+                            }
           ;
       
 code: 
-      expr SEMI {$1.ASTExprNode->print();}     
-    | assignment SEMI 
-    | if              
-    | ifelse          
-    | while           
-    | ret SEMI        
+      expr SEMI       { $$.ASTStmtNode = $1.ASTExprNode; }     
+    | assignment SEMI { $$.ASTStmtNode = $1.ASTAsgnNode; }        
+    | ifelse          { $$.ASTStmtNode = $1.ASTIfNode; }     
+    | while           { $$.ASTStmtNode = $1.ASTWhileNode; }     
+    | ret SEMI        { $$.ASTStmtNode = $1.ASTRetNode; }     
     ; 
 
 //Blocks of code
@@ -299,22 +316,27 @@ fnc_call:
 if:
     IF LPAR conditional RPAR LBRACK
       codeblocks
-    RBRACK
+    RBRACK                           { 
+                                       $$.ASTExprNode = $3.ASTRExprNode; 
+                                       $$.ASTBlockNode = $6.ASTBlockNode; 
+                                     }
   ;
 
 else: 
       ELSE LBRACK
         codeblocks
-      RBRACK            
+      RBRACK                         { $$.ASTBlockNode = $3.ASTBlockNode; }      
     ;
 
 
-ifelse: if else
+ifelse: 
+          if      { $$.ASTIfNode = new ASTIfNode($1.ASTExprNode, $1.ASTBlockNode, new ASTBlockNode()); }
+        | if else { $$.ASTIfNode = new ASTIfNode($1.ASTExprNode, $1.ASTBlockNode, $2.ASTBlockNode); }
       ;
 
 while: WHILE LPAR conditional RPAR LBRACK
          codeblocks
-       RBRACK                       
+       RBRACK                             { $$.ASTWhileNode = new ASTWhileNode($3.ASTRExprNode, $6.ASTBlockNode); }       
      ;
 
 params:
