@@ -37,11 +37,12 @@
 
   typedef struct params {
     type_t params[MAX_PARAMS];
+    char *param_names[MAX_PARAMS];
     int size; 
   } params_t;
 
   typedef struct fnc_dec {
-    const char* fnc_name;
+    char* fnc_name;
     params_t param_list;
     type_t ret_type; 
   } fnc_dec_t;
@@ -62,6 +63,8 @@
     ASTIfNode *ASTIfNode;
     ASTWhileNode *ASTWhileNode;
     ASTBlockNode *ASTBlockNode;
+    ASTVarDeclNode *ASTVarDeclNode;
+    ASTFuncDefNode *ASTFuncDefNode;  
 
     type_t type;
     char* name;
@@ -72,30 +75,33 @@
 
 
   //Helper Functions
-  void var_dec(hashtable_t* var_decs, const char *var_name, type_t var_type);
-  bool var_dec_check(hashtable_t* var_decs, const char *var_name);
-  void fnc_dec(hashtable_t* fnc_decs, const char *fnc_name, type_t ret_type, params_t param_list);
-  bool fnc_dec_check(hashtable_t* fnc_decs, const char *fnc_name, params_t params);
+  void var_dec(hashtable_t* var_decs, char *var_name, type_t var_type);
+  bool var_dec_check(hashtable_t* var_decs, char *var_name);
+  void fnc_dec(hashtable_t* fnc_decs, char *fnc_name, type_t ret_type, params_t param_list);
+  bool fnc_dec_check(hashtable_t* fnc_decs, char *fnc_name, params_t params);
   bool type_check(type_t expr1, type_t expr2);
-  bool assignment_check(hashtable_t* var_decs, const char* var, type_t expr2);
-  void varprint(FILE* fp, const char* key, void* item);
-  void fncprint(FILE* fp, const char* key, void* item);
-  string *convertToString(char* a);
+  bool assignment_check(hashtable_t* var_decs, char* var, type_t expr2);
+  void varprint(FILE* fp, char* key, void* item);
+  void fncprint(FILE* fp, char* key, void* item);
+  string *convertToString(char* str);
+  data_type_t convertToType(type_t type);
 }
 
 %union {
-  const char* str_val;
+  char* str_val;
   object_node element_val;
 }
 
 //Nonterminal Types
 %type <element_val> type
+%type <element_val> var_dec
+%type <element_val> fnc
+%type <element_val> fnc_dec
 %type <element_val> params
 %type <element_val> param_decs
 %type <element_val> param_dec
 %type <element_val> codeblocks
 %type <element_val> code
-%type <element_val> fnc_dec
 %type <element_val> expr
 %type <element_val> if
 %type <element_val> else
@@ -161,17 +167,36 @@ fnc_decs:
         ;
 
 fnc_dec: 
-         EXTERN type NAME LPAR param_decs RPAR { $$.fnc_dec.fnc_name = $3.name; fnc_dec(fnc_decs, $3.name, $2.type, $5.params);}
-       | type NAME LPAR param_decs RPAR        { $$.fnc_dec.fnc_name = $2.name; fnc_dec(fnc_decs, $2.name, $1.type, $4.params);}
-       | EXTERN type NAME LPAR RPAR            { $$.fnc_dec.fnc_name = $3.name; params_t param; fnc_dec(fnc_decs, $3.name, $2.type, param);}
+         EXTERN type NAME LPAR param_decs RPAR { 
+                                                 $$.fnc_dec.fnc_name = $3.name; 
+                                                 fnc_dec(fnc_decs, $3.name, $2.type, $5.params);
+                                                 $$.fnc_dec.param_list = $5.params;
+                                               }    
+       | type NAME LPAR param_decs RPAR        { 
+                                                 $$.fnc_dec.fnc_name = $2.name; 
+                                                 fnc_dec(fnc_decs, $2.name, $1.type, $4.params);
+                                                 $$.fnc_dec.param_list = $4.params;
+                                               }   
+       | EXTERN type NAME LPAR RPAR            { 
+                                                 $$.fnc_dec.fnc_name = $3.name; 
+                                                 $$.fnc_dec.param_list.params[0] = VOID_TYPE;
+                                                 $$.fnc_dec.param_list.param_names[0] = nullptr;
+                                                 params_t param; 
+                                                 fnc_dec(fnc_decs, $3.name, $2.type, param);
+                                               }
        | type NAME LPAR RPAR                   { $$.fnc_dec.fnc_name = $2.name; params_t param; fnc_dec(fnc_decs, $2.name, $1.type, param);}
        ;
 
 param_decs:
-            param_dec                   {$$.params.params[$$.params.size++] = $1.type;}
+            param_dec                   {
+                                          $$.params.params[$$.params.size] = $1.type;
+                                          $$.params.param_names[$$.params.size++] = strdup($1.name);
+                                        }
           | param_decs COMMA param_dec  {
                                           for (int i = 0; i < $1.params.size; i++) {
                                             $$.params.params[i] = $1.params.params[i];
+                                            $$.params.param_names[i] = strdup($1.params.param_names[i]);
+                                          
                                           }
                                           $$.params.size = $1.params.size;
                                           $$.params.params[$$.params.size++] = $3.type;
@@ -179,12 +204,16 @@ param_decs:
           ;
 param_dec: 
            type      { $$.type = $1.type; }
-         | type NAME { $$.type = $1.type; var_dec(var_decs, $2.name, $1.type); }
+         | type NAME { 
+                       $$.type = $1.type;
+                       $$.name = $2.name;
+                       var_dec(var_decs, $2.name, $1.type); 
+                     }
          ;
 
 //Function definitions
 fncs: 
-      fnc
+      fnc     { $1.ASTFuncDefNode->print(); }
     | fncs fnc
     ;
 
@@ -192,11 +221,19 @@ fncs:
 fnc: 
      fnc_dec LBRACK  
         codeblocks 
-     RBRACK
+     RBRACK         {
+                      $$.ASTFuncDefNode = new ASTFuncDefNode(convertToType($1.fnc_dec.ret_type), convertToString($1.fnc_dec.fnc_name), 
+                                                             convertToType($1.fnc_dec.param_list.params[0]), convertToString($1.fnc_dec.param_list.param_names[0]),
+                                                             $3.ASTBlockNode); 
+                    }
    | fnc_dec LBRACK 
         var_decs
         codeblocks
-     RBRACK    
+     RBRACK         {
+                      $$.ASTFuncDefNode = new ASTFuncDefNode(convertToType($1.fnc_dec.ret_type), convertToString($1.fnc_dec.fnc_name), 
+                                                             convertToType($1.fnc_dec.param_list.params[0]), convertToString($1.fnc_dec.param_list.param_names[0]),
+                                                             $4.ASTBlockNode); 
+                    }
    ;
 
 //Variable Declaration definitions
@@ -207,7 +244,14 @@ var_decs:
         ;
 
 var_dec:
-         type NAME { var_dec(var_decs, $2.name, $1.type); }
+         type NAME { 
+                     var_dec(var_decs, $2.name, $1.type); 
+                     $$.ASTVarDeclNode = new ASTVarDeclNode(false, convertToType($1.type), convertToString($2.name));
+                   }
+       | EXTERN type NAME {
+                            var_dec(var_decs, $3.name, $2.type); 
+                            $$.ASTVarDeclNode = new ASTVarDeclNode(true, convertToType($2.type), convertToString($3.name));
+                          }
        ; 
 
 //Code allowed inside functions
@@ -220,7 +264,6 @@ codeblocks:
           | codeblocks code {
                               $1.ASTBlockNode->stmt_list->push_back($2.ASTStmtNode);
                               $$.ASTBlockNode->stmt_list = $1.ASTBlockNode->stmt_list;
-                              $$.ASTBlockNode->print();
                             }
           ;
       
@@ -353,7 +396,7 @@ params:
 conditional:
              expr comparator expr { 
                                     type_check($1.type, $3.type);
-                                    $$.ASTRExprNode =new ASTRExprNode($1.ASTExprNode, $3.ASTExprNode, $3.rop);
+                                    $$.ASTRExprNode =new ASTRExprNode($1.ASTExprNode, $3.ASTExprNode, $2.rop);
                                   }
            ;
 
@@ -381,18 +424,31 @@ ret:
 
 // converts character array
 // to string and returns it
-string* convertToString(char* a)
+string* convertToString(char* str)
 {
     int i;
-    int size = strlen(a);
-    string *s = new string("");
+    int size = strlen(str);
+    string *temp = new string("");
     for (i = 0; i < size; i++) {
-        s->push_back(a[i]);
+        temp->push_back(str[i]);
     }
-    return s;
+    return temp;
 }
 
-void var_dec(hashtable_t* var_decs, const char *var_name, type_t var_type) {
+data_type_t convertToType(type_t type)
+{
+  switch(type) {
+    case INT_TYPE: 
+      return INT_T;
+    case VOID_TYPE:
+      return VOID_T;
+    default: 
+      return VOID_T;
+  }
+
+}
+
+void var_dec(hashtable_t* var_decs, char *var_name, type_t var_type) {
   if (hashtable_find(var_decs, var_name)) {
     fprintf(stderr, "<ERROR> Variable \'%s\' was previously declared.\n", var_name);
     return;
@@ -403,7 +459,7 @@ void var_dec(hashtable_t* var_decs, const char *var_name, type_t var_type) {
   hashtable_insert(var_decs, var_name, new_var); 
 }
 
-bool var_dec_check(hashtable_t* var_decs, const char *var_name) {
+bool var_dec_check(hashtable_t* var_decs, char *var_name) {
   if(!(hashtable_find(var_decs, var_name))) { 
     fprintf(stderr, "<ERROR> Variable \'%s\' was not declared.\n", var_name); 
     return false;
@@ -411,7 +467,7 @@ bool var_dec_check(hashtable_t* var_decs, const char *var_name) {
   return true;
 }
 
-void fnc_dec(hashtable_t* fnc_decs, const char *fnc_name, type_t ret_type, params_t param_list) {
+void fnc_dec(hashtable_t* fnc_decs, char *fnc_name, type_t ret_type, params_t param_list) {
   if (hashtable_find(fnc_decs, fnc_name)) {
     fprintf(stderr, "<ERROR> Function \'%s\' was previously declared.\n", fnc_name);
     return;
@@ -426,7 +482,7 @@ void fnc_dec(hashtable_t* fnc_decs, const char *fnc_name, type_t ret_type, param
   hashtable_insert(fnc_decs, fnc_name, fnc_dec); 
 }
 
-bool fnc_dec_check(hashtable_t* fnc_decs, const char *fnc_name, params_t params) {
+bool fnc_dec_check(hashtable_t* fnc_decs, char *fnc_name, params_t params) {
   if(!(hashtable_find(fnc_decs, fnc_name))) { 
     fprintf(stderr, "<ERROR> Function \'%s\' was not declared.\n", fnc_name); 
     return false;
@@ -456,7 +512,7 @@ bool type_check(type_t expr1, type_t expr2) {
   return true;
 }
 
-bool assignment_check(hashtable_t* var_decs, const char* var, type_t expr2) {
+bool assignment_check(hashtable_t* var_decs, char* var, type_t expr2) {
   if(*(type_t*)hashtable_find(var_decs, var) != expr2) {
     fprintf(stderr, "<ERROR> Left hand side type does not match right hand side of expression.\n");
     return false;
@@ -464,12 +520,12 @@ bool assignment_check(hashtable_t* var_decs, const char* var, type_t expr2) {
   return true;
 }
 
-void varprint(FILE* fp, const char* key, void* item)
+void varprint(FILE* fp, char* key, void* item)
 {
   fprintf(fp, "%s - %s", key, *(type_t*)item == 0 ? "INT" : "VOID");
 }
 
-void fncprint(FILE* fp, const char* key, void* item)
+void fncprint(FILE* fp, char* key, void* item)
 {
   fprintf(fp, "\n%s - ret_type = %s\n Parameters are: \n", key, *(int*)item == 0 ? "INT" : "VOID");
   for (int i = 0; i < (*(fnc_dec_t*)item).param_list.size; i++) {

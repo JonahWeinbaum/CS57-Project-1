@@ -62,11 +62,12 @@ extern int yydebug;
 
   typedef struct params {
     type_t params[MAX_PARAMS];
+    char *param_names[MAX_PARAMS];
     int size; 
   } params_t;
 
   typedef struct fnc_dec {
-    const char* fnc_name;
+    char* fnc_name;
     params_t param_list;
     type_t ret_type; 
   } fnc_dec_t;
@@ -87,6 +88,8 @@ extern int yydebug;
     ASTIfNode *ASTIfNode;
     ASTWhileNode *ASTWhileNode;
     ASTBlockNode *ASTBlockNode;
+    ASTVarDeclNode *ASTVarDeclNode;
+    ASTFuncDefNode *ASTFuncDefNode;  
 
     type_t type;
     char* name;
@@ -97,17 +100,18 @@ extern int yydebug;
 
 
   //Helper Functions
-  void var_dec(hashtable_t* var_decs, const char *var_name, type_t var_type);
-  bool var_dec_check(hashtable_t* var_decs, const char *var_name);
-  void fnc_dec(hashtable_t* fnc_decs, const char *fnc_name, type_t ret_type, params_t param_list);
-  bool fnc_dec_check(hashtable_t* fnc_decs, const char *fnc_name, params_t params);
+  void var_dec(hashtable_t* var_decs, char *var_name, type_t var_type);
+  bool var_dec_check(hashtable_t* var_decs, char *var_name);
+  void fnc_dec(hashtable_t* fnc_decs, char *fnc_name, type_t ret_type, params_t param_list);
+  bool fnc_dec_check(hashtable_t* fnc_decs, char *fnc_name, params_t params);
   bool type_check(type_t expr1, type_t expr2);
-  bool assignment_check(hashtable_t* var_decs, const char* var, type_t expr2);
-  void varprint(FILE* fp, const char* key, void* item);
-  void fncprint(FILE* fp, const char* key, void* item);
-  string *convertToString(char* a);
+  bool assignment_check(hashtable_t* var_decs, char* var, type_t expr2);
+  void varprint(FILE* fp, char* key, void* item);
+  void fncprint(FILE* fp, char* key, void* item);
+  string *convertToString(char* str);
+  data_type_t convertToType(type_t type);
 
-#line 111 "minic.tab.h"
+#line 115 "minic.tab.h"
 
 /* Token kinds.  */
 #ifndef YYTOKENTYPE
@@ -152,12 +156,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 86 "minic_temp.y"
+#line 90 "minic_temp.y"
 
-  const char* str_val;
+  char* str_val;
   object_node element_val;
 
-#line 161 "minic.tab.h"
+#line 165 "minic.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
