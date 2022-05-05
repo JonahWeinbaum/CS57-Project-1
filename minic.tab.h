@@ -89,7 +89,11 @@ extern int yydebug;
     ASTWhileNode *ASTWhileNode;
     ASTBlockNode *ASTBlockNode;
     ASTVarDeclNode *ASTVarDeclNode;
-    ASTFuncDefNode *ASTFuncDefNode;  
+    ASTFuncDeclNode *ASTFuncDeclNode; 
+    ASTFuncDefNode *ASTFuncDefNode;
+    vector<struct ASTDeclNode *> *ASTFuncDeclsNode;
+    vector<struct ASTFuncDefNode *> *ASTFuncDefsNode;  
+    ASTRootNode *ASTRootNode; 
 
     type_t type;
     char* name;
@@ -111,7 +115,7 @@ extern int yydebug;
   string *convertToString(char* str);
   data_type_t convertToType(type_t type);
 
-#line 115 "minic.tab.h"
+#line 119 "minic.tab.h"
 
 /* Token kinds.  */
 #ifndef YYTOKENTYPE
@@ -156,12 +160,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 90 "minic_temp.y"
+#line 94 "minic_temp.y"
 
   char* str_val;
   object_node element_val;
 
-#line 165 "minic.tab.h"
+#line 169 "minic.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

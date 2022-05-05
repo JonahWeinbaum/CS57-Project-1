@@ -17,7 +17,7 @@
   hashtable_t *fnc_decs;
 
   //Root note
-  ASTRootNode root = ASTRootNode(nullptr, nullptr, nullptr);
+  ASTRootNode *root = new ASTRootNode(nullptr, nullptr, nullptr);
 %}
 
 //Data Types
@@ -64,7 +64,11 @@
     ASTWhileNode *ASTWhileNode;
     ASTBlockNode *ASTBlockNode;
     ASTVarDeclNode *ASTVarDeclNode;
-    ASTFuncDefNode *ASTFuncDefNode;  
+    ASTFuncDeclNode *ASTFuncDeclNode; 
+    ASTFuncDefNode *ASTFuncDefNode;
+    vector<struct ASTDeclNode *> *ASTFuncDeclsNode;
+    vector<struct ASTFuncDefNode *> *ASTFuncDefsNode;  
+    ASTRootNode *ASTRootNode; 
 
     type_t type;
     char* name;
@@ -95,8 +99,11 @@
 //Nonterminal Types
 %type <element_val> type
 %type <element_val> var_dec
+%type <element_val> file
+%type <element_val> fncs
 %type <element_val> fnc
 %type <element_val> fnc_dec
+%type <element_val> fnc_decs
 %type <element_val> params
 %type <element_val> param_decs
 %type <element_val> param_dec
@@ -156,14 +163,20 @@
 
 //Start rule
 file: 
-      fncs          
-    | fnc_decs fncs 
+      fncs          { $$.ASTRootNode = new ASTRootNode(nullptr, nullptr, $1.ASTFuncDefsNode); root = $$.ASTRootNode; }  
+    | fnc_decs fncs { $$.ASTRootNode = new ASTRootNode($1.ASTFuncDeclsNode, nullptr, $2.ASTFuncDefsNode); root = $$.ASTRootNode; }
     ;
 
 //Function Declaration definitions
 fnc_decs:
-          fnc_dec SEMI
-        | fnc_decs fnc_dec SEMI
+          fnc_dec SEMI          { 
+                                  $$.ASTFuncDeclsNode = new vector<ASTDeclNode*>();
+                                  $$.ASTFuncDeclsNode->push_back($1.ASTFuncDeclNode);
+                                }
+        | fnc_decs fnc_dec SEMI {
+                                  $1.ASTFuncDeclsNode->push_back($2.ASTFuncDeclNode);
+                                  $$.ASTFuncDeclsNode = $1.ASTFuncDeclsNode;
+                                }
         ;
 
 fnc_dec: 
@@ -171,11 +184,15 @@ fnc_dec:
                                                  $$.fnc_dec.fnc_name = $3.name; 
                                                  fnc_dec(fnc_decs, $3.name, $2.type, $5.params);
                                                  $$.fnc_dec.param_list = $5.params;
+                                                 $$.ASTFuncDeclNode = new ASTFuncDeclNode(true, convertToType($2.type), 
+                                                                                          convertToString($3.name), convertToType($5.params.params[0]));
                                                }    
        | type NAME LPAR param_decs RPAR        { 
                                                  $$.fnc_dec.fnc_name = $2.name; 
                                                  fnc_dec(fnc_decs, $2.name, $1.type, $4.params);
                                                  $$.fnc_dec.param_list = $4.params;
+                                                 $$.ASTFuncDeclNode = new ASTFuncDeclNode(false, convertToType($1.type), 
+                                                                                          convertToString($2.name), convertToType($4.params.params[0]));
                                                }   
        | EXTERN type NAME LPAR RPAR            { 
                                                  $$.fnc_dec.fnc_name = $3.name; 
@@ -183,8 +200,16 @@ fnc_dec:
                                                  $$.fnc_dec.param_list.param_names[0] = nullptr;
                                                  params_t param; 
                                                  fnc_dec(fnc_decs, $3.name, $2.type, param);
+                                                 $$.ASTFuncDeclNode = new ASTFuncDeclNode(true, convertToType($2.type), 
+                                                                                          convertToString($3.name), VOID_T);
                                                }
-       | type NAME LPAR RPAR                   { $$.fnc_dec.fnc_name = $2.name; params_t param; fnc_dec(fnc_decs, $2.name, $1.type, param);}
+       | type NAME LPAR RPAR                   { 
+                                                 $$.fnc_dec.fnc_name = $2.name; 
+                                                 params_t param; 
+                                                 fnc_dec(fnc_decs, $2.name, $1.type, param);
+                                                 $$.ASTFuncDeclNode = new ASTFuncDeclNode(false, convertToType($1.type), 
+                                                                                          convertToString($2.name), VOID_T);
+                                               }
        ;
 
 param_decs:
@@ -213,8 +238,14 @@ param_dec:
 
 //Function definitions
 fncs: 
-      fnc     { $1.ASTFuncDefNode->print(); }
-    | fncs fnc
+      fnc      { 
+                 $$.ASTFuncDefsNode = new vector<ASTFuncDefNode*>(); 
+                 $$.ASTFuncDefsNode->push_back($1.ASTFuncDefNode); 
+               }
+    | fncs fnc { 
+                 $1.ASTFuncDefsNode->push_back($2.ASTFuncDefNode); 
+                 $$.ASTFuncDefsNode = $1.ASTFuncDefsNode;
+               }
     ;
 
 //TODO Fix params
@@ -226,22 +257,9 @@ fnc:
                                                              convertToType($1.fnc_dec.param_list.params[0]), convertToString($1.fnc_dec.param_list.param_names[0]),
                                                              $3.ASTBlockNode); 
                     }
-   | fnc_dec LBRACK 
-        var_decs
-        codeblocks
-     RBRACK         {
-                      $$.ASTFuncDefNode = new ASTFuncDefNode(convertToType($1.fnc_dec.ret_type), convertToString($1.fnc_dec.fnc_name), 
-                                                             convertToType($1.fnc_dec.param_list.params[0]), convertToString($1.fnc_dec.param_list.param_names[0]),
-                                                             $4.ASTBlockNode); 
-                    }
    ;
 
 //Variable Declaration definitions
-
-var_decs: 
-          var_dec SEMI
-        | var_decs var_dec SEMI
-        ;
 
 var_dec:
          type NAME { 
@@ -268,7 +286,8 @@ codeblocks:
           ;
       
 code: 
-      expr SEMI       { $$.ASTStmtNode = $1.ASTExprNode; }     
+      expr SEMI       { $$.ASTStmtNode = $1.ASTExprNode; }  
+    | var_dec SEMI    { $$.ASTStmtNode = $1.ASTVarDeclNode; }   
     | assignment SEMI { $$.ASTStmtNode = $1.ASTAsgnNode; }        
     | ifelse          { $$.ASTStmtNode = $1.ASTIfNode; }     
     | while           { $$.ASTStmtNode = $1.ASTWhileNode; }     
@@ -553,6 +572,6 @@ int main (int argc, char **argv)
         yyparse();
 
         //Print AST
-        // root.print();
+        root->print();
         return 0;
 }

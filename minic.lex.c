@@ -940,132 +940,132 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_RULE_SETUP
 #line 45 "minic_temp.l"
-{ printf("INT - %s\n", yytext); yylval.element_val.type = INT_TYPE; return INT; } 
+{ yylval.element_val.type = INT_TYPE; return INT; } 
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
 #line 46 "minic_temp.l"
-{ printf("VOID - %s\n", yytext); yylval.element_val.type = VOID_TYPE; return VOID; } 
+{ yylval.element_val.type = VOID_TYPE; return VOID; } 
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 47 "minic_temp.l"
-{ printf("EXTERN - %s\n", yytext); return EXTERN; }
+{ return EXTERN; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 48 "minic_temp.l"
-{ printf("RET - %s\n", yytext); return RET; }
+{ return RET; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 49 "minic_temp.l"
-{ printf("WHILE - %s\n", yytext); return WHILE; }
+{ return WHILE; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 50 "minic_temp.l"
-{ printf("ADD - %s\n", yytext);  return ADD; }
+{ return ADD; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 51 "minic_temp.l"
-{ printf("SUB - %s\n", yytext); return SUB; }
+{ return SUB; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 52 "minic_temp.l"
-{ printf("MULT - %s\n", yytext); return MULT; }
+{ return MULT; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 53 "minic_temp.l"
-{ printf("DIV - %s\n", yytext); return DIV; }
+{ return DIV; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 54 "minic_temp.l"
-{ printf("IF - %s\n", yytext); return IF; }
+{ return IF; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 55 "minic_temp.l"
-{ printf("ELSE - %s\n", yytext); return ELSE; }
+{ return ELSE; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 56 "minic_temp.l"
-{ printf("SEMI - %s\n", yytext); return SEMI; }
+{ return SEMI; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 57 "minic_temp.l"
-{ printf("EQEQ - %s\n", yytext); return EQEQ; }
+{ return EQEQ; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
 #line 58 "minic_temp.l"
-{ printf("GEQ - %s\n", yytext); return GEQ; }
+{ return GEQ; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 59 "minic_temp.l"
-{ printf("LEQ - %s\n", yytext); return LEQ; }
+{ return LEQ; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 60 "minic_temp.l"
-{ printf("LESS - %s\n", yytext); return LESS; }
+{ return LESS; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 61 "minic_temp.l"
-{ printf("GREAT - %s\n", yytext); return GREAT; }
+{ return GREAT; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 62 "minic_temp.l"
-{ printf("NEQ - %s\n", yytext); return NEQ; }
+{ return NEQ; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 63 "minic_temp.l"
-{ printf("LBRACK - %s\n", yytext); return LBRACK; }
+{ return LBRACK; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 64 "minic_temp.l"
-{ printf("RBRACK - %s\n", yytext); return RBRACK; }
+{ return RBRACK; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 65 "minic_temp.l"
-{ printf("LPAR - %s\n", yytext); return LPAR; }
+{ return LPAR; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 66 "minic_temp.l"
-{ printf("RPAR - %s\n", yytext); return RPAR; }
+{ return RPAR; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 67 "minic_temp.l"
-{ printf("COMMA - %s\n", yytext); return COMMA; }
+{ return COMMA; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
 #line 68 "minic_temp.l"
-{ printf("EQ - %s\n", yytext); return EQ; }
+{ return EQ; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
 #line 69 "minic_temp.l"
-{ printf("NUM - %s\n", yytext); yylval.element_val.ASTIntLiteralNode = new ASTIntLiteralNode(atoi(yytext)); return NUM; }
+{ yylval.element_val.ASTIntLiteralNode = new ASTIntLiteralNode(atoi(yytext)); return NUM; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
 #line 70 "minic_temp.l"
-{ printf("NAME - %s\n", yytext); yylval.element_val.name = strdup(yytext); return NAME;}
+{ yylval.element_val.name = strdup(yytext); return NAME;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
