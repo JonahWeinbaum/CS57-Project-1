@@ -10,7 +10,7 @@ YACC=bison
 YFLAGS=-d -Wempty-rule -Wcounterexample -t -b minic
 
 CC = clang++-10
-CFLAGS = -x c++ -g -I../lib -I../set -I../hash
+CFLAGS = -x c++ -g -Wno-write-strings -I../lib -I../set -I../hash
 MAKE = make
 # for memory-leak tests
 VALGRIND = valgrind --leak-check=full --show-leak-kinds=all
@@ -21,15 +21,15 @@ VALGRIND = valgrind --leak-check=full --show-leak-kinds=all
 
 all: minic
 
-minic.tab.h minic.tab.c: minic_temp.y
+minic.tab.h minic.tab.c: minic.y
 	$(YACC) $(YFLAGS) $?
 
-minic.lex.c : minic_temp.l
+minic.lex.c : minic.l
 	$(LEX) $(LFLAGS) -o $@ $^
 
-minic : ast_c++/ast.cpp ast_c++/ast.hpp hash/hashtable.c hash/hash.c\
+minic : ast_c++/ast.cpp hash/hashtable.c hash/hash.c\
 		set/set.c minic.lex.c minic.tab.c
 	$(CC) $(CFLAGS) $^ -o $@ -ll
 
 clean:
-	$(RM) minic minic.output minic.???.? *.o set/*.o hash/*.o ast_c/*.o
+	$(RM) minic minic.output minic.???.? *.o set/*.o hash/*.o
