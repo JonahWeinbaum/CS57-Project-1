@@ -4,6 +4,15 @@
 
 <hr></hr>
 
+*Compulation*
+
+   To run the minic program, use `make` to compile and `make clean` to clean the output files use. 
+   Some examples have been provided to illustrate functionality in the `examples` folder. 
+   To run use `./minic [FILENAME]` to read from either a file or STDIN.
+
+<hr></hr>
+
+
 *Scope*
 
     * Function Scope is always global
