@@ -102,11 +102,11 @@
 }
 
 %destructor { 
-              free($$.name);
-              for (int i = 0; i < $$.fnc_dec.param_list.size; i++) {
-                  free($$.fnc_dec.param_list.param_names[i]);
-              }
-              free($$.fnc_dec.fnc_name);
+              // free($$.name);
+              // for (int i = 0; i < $$.fnc_dec.param_list.size; i++) {
+              //     free($$.fnc_dec.param_list.param_names[i]);
+              // }
+              // free($$.fnc_dec.fnc_name);
             } <element_val>
 
 //Nonterminal Types
@@ -233,21 +233,21 @@ fnc_dec:
 param_decs:
             param_dec                   {
                                           $$.params.params[$$.params.size] = $1.type;
-                                          $$.params.param_names[$$.params.size++] = strdup($1.name);
+                                          $$.params.param_names[$$.params.size++] = $1.name ? strdup($1.name) : NULL;
                                         }
           | param_decs COMMA param_dec  {
                                           for (int i = 0; i < $1.params.size; i++) {
                                             $$.params.params[i] = $1.params.params[i];
-                                            $$.params.param_names[i] = strdup($1.params.param_names[i]);
+                                            $$.params.param_names[i] = $1.params.param_names[i] ? strdup($1.params.param_names[i]): NULL;
                                           
                                           }
                                           $$.params.size = $1.params.size;
                                           $$.params.params[$$.params.size] = $3.type;
-                                          $$.params.param_names[$$.params.size++] = strdup($3.name);
+                                          $$.params.param_names[$$.params.size++] = $1.name ? strdup($3.name) : NULL;
                                         }
           ;
 param_dec: 
-           type      { $$.type = $1.type; }
+           type      { $$.type = $1.type; $$.name = nullptr; }
          | type NAME { 
                        $$.type = $1.type;
                        $$.name = $2.name;
@@ -372,6 +372,9 @@ unr_expr:
                      }
                      $$.ASTUExprNode = new ASTUExprNode( new ASTVarNode(convertToString($2.name)), NEG);
                    }
+        | SUB NUM  {
+                     $$.ASTUExprNode = new ASTUExprNode($2.ASTIntLiteralNode, NEG);
+                   }
         | SUB LPAR expr RPAR { 
                                $$.type = $3.type;
                                $$.ASTUExprNode = new ASTUExprNode($3.ASTExprNode, NEG);
@@ -470,6 +473,7 @@ ret:
 // to string and returns it
 string* convertToString(char* str)
 {
+    if (str == NULL || str == nullptr) { return nullptr; } 
     int i;
     int size = strlen(str);
     string *temp = new string("");

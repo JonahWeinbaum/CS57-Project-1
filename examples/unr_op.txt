@@ -1,11 +1,7 @@
-void tester_fnc(int);
+void test_call(int);
 
-int test (int param) {
+int unr_op (void) {
     int test; 
-    test = -test + (tester_fnc(param));
-}
-
-int other(void) {
-    int test;
-    test = -test;
+    test = -test - (5*-2);
+    test_call(-test);
 }

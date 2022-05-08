@@ -1,0 +1,8 @@
+void func1() {
+    int test;
+    int test;
+}
+
+void func2() {
+    int test;
+}

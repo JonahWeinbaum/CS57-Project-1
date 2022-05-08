@@ -38,7 +38,7 @@ EQ      "="
 NAME    [a-zA-Z][a-zA-Z0-9_]*
 NUM     [0-9][0-9]*
 SPACE   [ \t]
-NL      [\n\r] 
+NL      [\n\r<<EOF>>] 
 
 %%
 
@@ -69,4 +69,4 @@ NL      [\n\r]
 {NUM}                           { yylval.element_val.ASTIntLiteralNode = new ASTIntLiteralNode(atoi(yytext)); return NUM; }
 {NAME}                          { yylval.element_val.name = strdup(yytext); return NAME;}
 {SPACE}+                        
-{NL}+                          
+{NL}+                      
