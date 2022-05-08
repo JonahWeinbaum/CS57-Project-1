@@ -1,11 +1,15 @@
 # CS57 Project 1
-Jonah Weinbaum
 
+<h2>Jonah Weinbaum</h2>
+
+<hr></hr>
 
 *Scope*
 
     * Function Scope is always global
     * Variable scope is always local to a function 
+    
+<hr></hr>
 
 *Declarations*
 
@@ -14,6 +18,7 @@ Jonah Weinbaum
     * Functions used before declaration
     * Variables used before declaration
     * Variables redeclared within the same scope
+<hr></hr>
 
 *Parameters*
 
@@ -21,12 +26,15 @@ Jonah Weinbaum
     For this reason, I am considering this as an additional aspect which I am adding to my project. 
     This is to say, a function with multiple parameters will always expect this number of parameters in the proper order of type. 
 
+<hr></hr>
 
 *AST*
 
     While my code is written in C, the C AST implementation had many problems and so, as per Ben's suggestion
     in the slack, I am using the C++ AST. This meant many conversions of types were required and resulted in 
     less than ideal code in terms of cleanliness. However, the end result is a functional AST. 
+
+<hr></hr>
 
 **Implementation**
 
