@@ -2,8 +2,7 @@ int function(int, void);
 
 void tester() {
     void test1;
-    int asdn;
-    int tester;
-    asdn + tester; 
-    function(test1, asdn);
+    int test2;
+    function(test1, test2);
+    function(test2, test1);
 }

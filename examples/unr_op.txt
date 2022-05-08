@@ -1,0 +1,11 @@
+void tester_fnc(int);
+
+int test (int param) {
+    int test; 
+    test = -test + (tester_fnc(param));
+}
+
+int other(void) {
+    int test;
+    test = -test;
+}
