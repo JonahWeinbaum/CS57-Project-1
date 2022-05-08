@@ -4,7 +4,7 @@
 
 <hr></hr>
 
-*Compulation*
+*Compilation*
 
    To run the minic program, use `make` to compile and `make clean` to clean the output files use. 
    Some examples have been provided to illustrate functionality in the `examples` folder. 
